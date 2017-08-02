@@ -246,11 +246,11 @@
 			box.speed = 1;
 		}
 		else if (data < 100){
+			box.highlight(COLORS.Red);
 			box.mesh.material.uniforms.magnitude.value = .02;
 			box.speed = 1.5;
 		}
 		else{
-			box.highlight(COLORS.Red);
 			box.mesh.material.uniforms.magnitude.value = .035;
 			box.speed = data/55;
 		}
