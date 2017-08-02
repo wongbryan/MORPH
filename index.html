@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Rain</title>
+</head>
+
+<style>
+	body{
+		margin: 0;
+		overflow: hidden;
+	}
+
+	a{
+		font-family: Helvetica;
+		font-size: 1em;
+		position: fixed;
+		margin: 25px;
+	}
+
+	a:first-child{
+		left: 0;
+		bottom: 0;
+	}
+
+	a:nth-child(2){
+		right: 0;
+		bottom: 0;
+		transition: all .25s;
+	}
+
+	a:nth-child(2):hover{
+		cursor: pointer;
+		color: #486686;
+	}
+</style>
+<body>
+	<a>click to morph</a>
+	<a onclick="sound.play()">play</a>
+	<div id="container"></div>
+</body>
+
+<script type="vsh" id="vertexShader">
+	uniform float time;
+	uniform float amplitude;
+	attribute vec3 targetPosition;
+
+	void main(){
+		gl_PointSize = 1.;
+
+		vec3 morphedPosition = position; //set morph to initial position
+		morphedPosition += (targetPosition-position) * amplitude; //amplitude changes from 0->1
+		gl_Position = projectionMatrix * modelViewMatrix * vec4(morphedPosition, 1.);
+	}
+</script>
+
+<script type="fsh" id="fragmentShader">
+	uniform vec3 color;
+
+	void main(){
+		gl_FragColor = vec4(vec3(color), 1.);
+	}
+</script>
+
+<script src="bower_components/tween.js/src/Tween.js"></script>
+<script src="bower_components/three.js/build/three.js"></script>
+<script src="bower_components/three.js/examples/js/controls/FirstPersonControls.js"></script>
+<script src="js/data.js"></script>
+<script src="js/classes.js"></script>
+<script>
+
+	var camera, scene, renderer, controls, gui;
+	var raycaster = new THREE.Raycaster();
+	var mouse = new THREE.Vector2;
+	var angle = 0;
+	var clock = new THREE.Clock();
+	var time;
+
+	var model;
+	var box;
+	var analyser;
+	var sound;
+
+	var boxMeshesArray = [];
+
+	const COLORS = {
+		Black: new THREE.Color(0x1c1c1c),
+		Red: new THREE.Color(0xcc390e)
+	};
+
+	var loadedBox = false;
+
+	function onMouseMove() {
+		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		raycaster.setFromCamera(mouse, camera);
+
+		var intersects = raycaster.intersectObjects(boxMeshesArray, false);
+
+		if (!loadedBox)
+			return;
+
+		if (intersects.length > 0){
+			box.highlight(COLORS.Red);
+		}
+		else{
+			box.highlight(COLORS.Black);
+		}
+	}
+
+	function onMouseDown(){
+		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		raycaster.setFromCamera(mouse, camera);
+
+		var intersects = raycaster.intersectObjects(boxMeshesArray, false);
+
+		if (!loadedBox)
+			return;
+
+		if (intersects.length > 0){
+			var random = Math.floor(Math.random() * 3);
+			while (random == GEOMETRIES.current)
+				random = Math.floor(Math.random() * 3);
+			box.morph(GEOMETRIES.Array[random]);
+			GEOMETRIES.current = random;
+		}
+	}
+
+	function resize(){
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+	}
+
+	function init() {
+		var container = document.getElementById( 'container' );
+		renderer = new THREE.WebGLRenderer({antialias: true});
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = THREE.PCSoftShadowMap;
+		renderer.setPixelRatio( window.devicePixelRatio );
+		renderer.setSize( window.innerWidth, window.innerHeight);
+		renderer.setClearColor(0xededed);
+		container.appendChild( renderer.domElement );
+		
+		var listener = new THREE.AudioListener();
+		camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+		camera.add(listener);
+		camera.position.set(0, 0, 40);
+
+		controls = new THREE.FirstPersonControls(camera, renderer.domElement);
+		controls.movementSpeed = 25;
+		controls.activeLook = false;
+		controls.target = new THREE.Vector3(0, 0, 0);
+
+		scene = new THREE.Scene();
+
+		var directionalLight = new THREE.DirectionalLight(0xffffff, .7);
+		directionalLight.position.set(1, -1, 0).normalize();
+		directionalLight.castShadow = true;
+		var ambientLight = new THREE.AmbientLight(0xffffff);
+		var pointLight = new THREE.PointLight(0xffffff);
+		pointLight.position.set(0, 0, 0);
+
+		scene.add(ambientLight);
+		scene.add(directionalLight);
+		scene.add(pointLight);
+
+		var audioLoader = new THREE.AudioLoader();
+		sound = new THREE.PositionalAudio(listener);
+		audioLoader.load('assets/rain.mp3', function(buffer){
+			sound.setBuffer(buffer);
+			sound.setRefDistance(20);
+			sound.play();
+		});
+
+		var geom;
+		var modelLoader = new THREE.JSONLoader();
+		modelLoader.load(
+			'assets/gun.json',
+
+			function(geometry, materials){
+				geom = geometry;
+				box = new ParticleObject(geom, 0x486686, .05);
+			    box.mesh.position.set(0, 0, 0);
+			    box.mesh.scale.set(5, 5, 5);
+			    box.mesh.rotation.y = Math.PI/3;
+			    box.mesh.add(sound);
+			    boxMeshesArray.push(box.mesh);
+			    scene.add( box.mesh );
+			    loadedBox = true;
+			}
+		)
+
+	    // geometry = new THREE.SphereGeometry(1, 64, 64);
+
+	    camera.position.set(-38.9, 0, -.4);
+
+	    analyser = new THREE.AudioAnalyser(sound, 32);
+
+		window.addEventListener('resize', resize);
+		window.addEventListener('mousemove', onMouseMove);
+		renderer.domElement.addEventListener('mousedown', onMouseDown);
+	}
+
+	function update(){
+		var delta = clock.getDelta();
+		controls.update(delta);
+
+		if (!loadedBox)
+			return;
+
+		box.update();
+
+		var data = analyser.getAverageFrequency();
+		if (data < 20){
+			box.speed = 1;
+		}
+		else{
+			box.speed = data/55;
+		}
+
+		TWEEN.update();
+	}
+
+	function animate(){
+		update();
+		renderer.render(scene, camera);
+		window.requestAnimationFrame(animate);
+	}
+
+	init();
+	animate();
+
+</script>
+</html>
