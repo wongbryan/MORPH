@@ -10,6 +10,26 @@
 		overflow: hidden;
 	}
 
+	#loading{
+		background-color: black;
+		height: 100vh;
+		width: 100vw;
+		position: fixed;
+		z-index: 2000;
+	}
+
+	#loading h1 {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		color: white;
+		font-family: sans-serif;
+		font-size: 1em;
+		font-weight: lighter;
+		text-align: center;
+	}
+
 	a{
 		font-family: Helvetica;
 		font-size: 1em;
@@ -34,6 +54,7 @@
 	}
 </style>
 <body>
+	<div id="loading"><h1>LOADING</h1></div>
 	<a>click to morph</a>
 	<a onclick="sound.play()">play</a>
 	<div id="container"></div>
@@ -188,6 +209,10 @@
 			    boxMeshesArray.push(box.mesh);
 			    scene.add( box.mesh );
 			    loadedBox = true;
+			    GEOMETRIES.Array.push(geometry);
+
+			    var loading = document.getElementById('loading');
+			    document.body.removeChild(loading);
 			}
 		)
 
