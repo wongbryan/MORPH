@@ -3,10 +3,11 @@ function ParticleObject(geometry, color, size){
   //PUSH VERTICES OF GEOMETRY TO A BUFFER GEOMETRY, AS NEEDED TO DEFINE CUSTOM ATTRIBUTES
 
   var gunVertexCount = geometry.vertices.length;
-  console.log(gunVertexCount);
   var sphereVertexCount = SPHERE_VERTICES.length;
   var geom = new THREE.BufferGeometry();
   var vertices = [];
+
+  //DEFINE POSITION ATTRIBUTE
 
   for (var i=0; i<geometry.vertices.length; i++){
     var vertex = geometry.vertices[i];
@@ -15,17 +16,27 @@ function ParticleObject(geometry, color, size){
     vertices.push(geometry.vertices[i].z);
   }
 
+  //DEFINE ANGLE ATTRIBUTE
+  var maxVerticesCount = 20000;
+
+  var angles = new Float32Array(maxVerticesCount);
+  for (var i=0; i<maxVerticesCount; i++){
+    var angle = Math.random() * 2 * Math.PI;
+    angles[i] = angle;
+  }
+
+  geom.addAttribute('angle', new THREE.BufferAttribute(angles, 1));
+
   //CREATE TYPED ARRAYS TO MAKE THEM ATTRIBUTES. EACH ARRAY CONTAINS SAME # OF VERTICES
 
   var floatVertices = new Float32Array(vertices) 
   var targetVertices = new Float32Array(gunVertexCount * 3);
 
-  //DEFINE CUSTOM ATTRIBUTES (TARGET POSITION) SPECIFIC TO EACH VERTEX
-
   geom.addAttribute('position', new THREE.BufferAttribute(floatVertices, 3)); //gun
   geom.addAttribute('targetPosition', new THREE.BufferAttribute(targetVertices, 3)); //sphere
-
   geom.attributes['targetPosition'].dynamic = true;
+
+  //DEFINE TARGET POSITION ATTRIBUTE
 
   for (var i=0; i<SPHERE_VERTICES.length; i++){
     var target = SPHERE_VERTICES[i];
@@ -41,9 +52,10 @@ function ParticleObject(geometry, color, size){
   var texture = new THREE.TextureLoader().load('assets/rgb texture.png');
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   var uniforms = {
-    time : { type : 'f', value : 1.0 },
+    time : { type : 'f', value : 0.0 },
     amplitude : { type : 'f', value : 0.0 }, //how far along the morph it is
-    color : { type : 'v3', value : COLORS.Black}
+    color : { type : 'v3', value : COLORS.Black},
+    magnitude : { type : 'f', value : 0.}
   };
 
   var particleMat = new THREE.ShaderMaterial({
@@ -57,7 +69,6 @@ function ParticleObject(geometry, color, size){
   var particleGlobe = new THREE.Points(geom, particleMat);
 
   this.mesh = particleGlobe;
-  this.uniforms = uniforms;
 
   this.speed = 1;
 
@@ -90,21 +101,21 @@ function ParticleObject(geometry, color, size){
 
   this.morph = function(geometry){ //pass in a geometry
     var targetVertices = geometry.vertices;
+    var geom = this.mesh.geometry;
     for (var i=0; i<targetVertices.length; i++){
       var target = targetVertices[i];
       var index = i*3;
 
       //UPDATE TARGET VERTICES
-      this.mesh.geometry.attributes['targetPosition'].array[index] = target.x;
-      this.mesh.geometry.attributes['targetPosition'].array[index+1] = target.y;
-      this.mesh.geometry.attributes['targetPosition'].array[index+2] = target.z;
+      geom.attributes['targetPosition'].array[index] = target.x;
+      geom.attributes['targetPosition'].array[index+1] = target.y;
+      geom.attributes['targetPosition'].array[index+2] = target.z;
 
-      this.mesh.geometry.attributes['targetPosition'].needsUpdate = true;
+      geom.attributes['targetPosition'].needsUpdate = true;
     }
 
     this.mesh.material.uniforms['amplitude'].value = 0.0;
 
-    console.log(geom.attributes['targetPosition']);
     var _this = this;
     var cur = {amplitude : 0.};
     var target = {amplitude : 1.0 };
@@ -118,11 +129,11 @@ function ParticleObject(geometry, color, size){
         var index = i*3;
 
         //UPDATE TARGET VERTICES
-        _this.mesh.geometry.attributes['position'].array[index] = target.x;
-        _this.mesh.geometry.attributes['position'].array[index+1] = target.y;
-        _this.mesh.geometry.attributes['position'].array[index+2] = target.z;
+        geom.attributes['position'].array[index] = target.x;
+        geom.attributes['position'].array[index+1] = target.y;
+        geom.attributes['position'].array[index+2] = target.z;
 
-        _this.mesh.geometry.attributes['position'].needsUpdate = true;
+        geom.attributes['position'].needsUpdate = true;
       }
     });
 
@@ -134,7 +145,7 @@ function ParticleObject(geometry, color, size){
   }
 
   this.update = function(){
-    this.mesh.material.uniforms['time'].value += .001;
+    this.mesh.material.uniforms['time'].value += .1;
     this.mesh.rotation.y += .0025*this.speed*this.speed*this.speed;
     this.mesh.rotation.x += .0025*this.speed*this.speed*this.speed;
   }

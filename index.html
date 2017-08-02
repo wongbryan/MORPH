@@ -55,7 +55,7 @@
 </style>
 <body>
 	<div id="loading"><h1>LOADING</h1></div>
-	<a>click to morph</a>
+	<a>click to object morph</a>
 	<a onclick="sound.play()">play</a>
 	<div id="container"></div>
 </body>
@@ -63,14 +63,18 @@
 <script type="vsh" id="vertexShader">
 	uniform float time;
 	uniform float amplitude;
+	uniform float magnitude;
 	attribute vec3 targetPosition;
+	attribute float angle;
 
 	void main(){
 		gl_PointSize = 1.;
 
+		vec3 direction = magnitude*vec3(cos(time+angle), sin(time+angle), cos(time+angle));
+
 		vec3 morphedPosition = position; //set morph to initial position
 		morphedPosition += (targetPosition-position) * amplitude; //amplitude changes from 0->1
-		gl_Position = projectionMatrix * modelViewMatrix * vec4(morphedPosition, 1.);
+		gl_Position = projectionMatrix * modelViewMatrix * vec4(morphedPosition + direction, 1.);
 	}
 </script>
 
@@ -223,7 +227,7 @@
 	    analyser = new THREE.AudioAnalyser(sound, 32);
 
 		window.addEventListener('resize', resize);
-		window.addEventListener('mousemove', onMouseMove);
+		// window.addEventListener('mousemove', onMouseMove);
 		renderer.domElement.addEventListener('mousedown', onMouseDown);
 	}
 
@@ -237,10 +241,17 @@
 		box.update();
 
 		var data = analyser.getAverageFrequency();
-		if (data < 20){
+		if (data < 80){
+			box.mesh.material.uniforms.magnitude.value = 0.;
 			box.speed = 1;
 		}
+		else if (data < 100){
+			box.mesh.material.uniforms.magnitude.value = .02;
+			box.speed = 1.5;
+		}
 		else{
+			box.highlight(COLORS.Red);
+			box.mesh.material.uniforms.magnitude.value = .035;
 			box.speed = data/55;
 		}
 
