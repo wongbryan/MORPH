@@ -80,9 +80,10 @@
 
 <script type="fsh" id="fragmentShader">
 	uniform vec3 color;
+	uniform float opacity;
 
 	void main(){
-		gl_FragColor = vec4(vec3(color), .1);
+		gl_FragColor = vec4(vec3(color), opacity);
 	}
 </script>
 
@@ -243,15 +244,18 @@
 		var data = analyser.getAverageFrequency();
 		if (data < 80){
 			box.mesh.material.uniforms.magnitude.value = 0.;
+			box.mesh.material.uniforms.opacity.value = 0.05;
 			box.speed = 1;
 		}
 		else if (data < 100){
 			box.highlight(COLORS.Red);
-			box.mesh.material.uniforms.magnitude.value = .02;
+			box.mesh.material.uniforms.magnitude.value = data/7500;
+			box.mesh.material.uniforms.opacity.value = data/750;
 			box.speed = 1.5;
 		}
 		else{
-			box.mesh.material.uniforms.magnitude.value = .035;
+			box.mesh.material.uniforms.magnitude.value = data/5500;
+			box.mesh.material.uniforms.opacity.value = data/550;
 			box.speed = data/55;
 		}
 

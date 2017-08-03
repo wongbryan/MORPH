@@ -1,17 +1,19 @@
 function ParticleObject(geometry, color, size){
-  
-  //PUSH VERTICES OF GEOMETRY TO A BUFFER GEOMETRY, AS NEEDED TO DEFINE CUSTOM ATTRIBUTES
 
-  var gunVertexCount = geometry.vertices.length;
-  var sphereVertexCount = SPHERE_VERTICES.length;
   var geom = new THREE.BufferGeometry();
   geom.fromGeometry(geometry); //defines the position attribute for us, along with others
-  var vertices = [];
+
+  var vertexCount = geom.attributes['position'].count;
+  var initialTargetVertexCount = SPHERE_VERTICES.length;
+
+  //DEFINE POSITION ATTRIBUTE (Done for us)
+
+  geom.attributes['position'].dynamic = true;
 
   //DEFINE ANGLE ATTRIBUTE
 
-  var angles = new Float32Array(geometry.vertices.length);
-  for (var i=0; i<vertices.length; i++){
+  var angles = new Float32Array(vertexCount);
+  for (var i=0; i<vertexCount; i++){
     var angle = Math.random() * 2 * Math.PI;
     angles[i] = angle;
   }
@@ -20,7 +22,7 @@ function ParticleObject(geometry, color, size){
 
   //DEFINE TARGET POSITION ATTRIBUTE
 
-  var targetVertices = new Float32Array(gunVertexCount * 3);
+  var targetVertices = new Float32Array(vertexCount * 3);
 
   for (var i=0; i<SPHERE_VERTICES.length; i++){
     var target = SPHERE_VERTICES[i];
@@ -34,17 +36,6 @@ function ParticleObject(geometry, color, size){
   geom.addAttribute('targetPosition', new THREE.BufferAttribute(targetVertices, 3)); //sphere
   geom.attributes['targetPosition'].dynamic = true;
 
-  //REDEFINE POSITION ATTRIBUTE
-  // geom.attributes['position'].dynamic = true;
-
-  // var geomVertices = geom.attributes['position'].array = [];
-  // for (var i=0; i < geometry.vertices.length; i++){
-  //   var index = i*3;
-  //   geomVertices[index] = geometry.vertices[i].x;
-  //   geomVertices[index+1] = geometry.vertices[i].y;
-  //   geomVertices[index+2] = geometry.vertices[i].z;
-  // }
-
   //DEFINE UNIFORMS AND SHADER MATERIAL
 
   var texture = new THREE.TextureLoader().load('assets/rgb texture.png');
@@ -53,7 +44,8 @@ function ParticleObject(geometry, color, size){
     time : { type : 'f', value : 0.0 },
     amplitude : { type : 'f', value : 0.0 }, //how far along the morph it is
     color : { type : 'v3', value : COLORS.Black},
-    magnitude : { type : 'f', value : 0.}
+    magnitude : { type : 'f', value : 5.},
+    opacity : { type : 'f', value : .1}
   };
 
   var particleMat = new THREE.ShaderMaterial({
@@ -100,19 +92,27 @@ function ParticleObject(geometry, color, size){
   }
 
   this.morph = function(geometry){ //pass in a geometry
+    //GET TARGET
     var targetVertices = geometry.vertices;
+
+    //GET CURRENT GEOMETRY, CREATE A NEW ARRAY TO HOLD TARGETS
+    //Create a new array in case the next geometry has a different # of vertices
     var geom = this.mesh.geometry;
+    var currentVertexCount = geom.attributes['position'].count;
+    var newTargets = new Float32Array(currentVertexCount * 3);
+
     for (var i=0; i<targetVertices.length; i++){
       var target = targetVertices[i];
       var index = i*3;
 
       //UPDATE TARGET VERTICES
-      geom.attributes['targetPosition'].array[index] = target.x;
-      geom.attributes['targetPosition'].array[index+1] = target.y;
-      geom.attributes['targetPosition'].array[index+2] = target.z;
-
-      geom.attributes['targetPosition'].needsUpdate = true;
+      newTargets[index] = target.x;
+      newTargets[index+1] = target.y;
+      newTargets[index+2] = target.z;
     }
+
+    geom.attributes['targetPosition'] = new THREE.BufferAttribute(newTargets, 3);
+    geom.attributes['targetPosition'].needsUpdate = true;
 
     this.mesh.material.uniforms['amplitude'].value = 0.0;
 
@@ -123,18 +123,8 @@ function ParticleObject(geometry, color, size){
     tween.easing(TWEEN.Easing.Elastic.Out);
 
     tween.onComplete(function(){
-       //UPDATE "CURRENT" POSITION BUFFER, SO THE STARTING POINT ISN'T SAME AS BEFORE. MUST BE CALLED AFTER TWEEN IS DONE
-       for (var i=0; i<targetVertices.length; i++){
-        var target = targetVertices[i];
-        var index = i*3;
-
-        //UPDATE TARGET VERTICES
-        geom.attributes['position'].array[index] = target.x;
-        geom.attributes['position'].array[index+1] = target.y;
-        geom.attributes['position'].array[index+2] = target.z;
-
-        geom.attributes['position'].needsUpdate = true;
-      }
+      geom.attributes['position'] = new THREE.BufferAttribute(newTargets, 3);
+      geom.attributes['position'].needsUpdate = true;
     });
 
     tween.onUpdate(function(){
