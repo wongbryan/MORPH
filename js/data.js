@@ -6,7 +6,7 @@ var GEOMETRIES = {
 	current : 0
 };
 
-var sphereGeom = new THREE.SphereGeometry(2.5, 128, 128);
+var sphereGeom = new THREE.SphereGeometry(2.5, 256, 256);
 var SPHERE_VERTICES = sphereGeom.vertices;
 GEOMETRIES.Array.push(sphereGeom);
 
