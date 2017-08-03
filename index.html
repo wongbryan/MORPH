@@ -242,6 +242,7 @@
 
 		var data = analyser.getAverageFrequency();
 		if (data < 80){
+			box.highlight(COLORS.Black);
 			box.mesh.material.uniforms.magnitude.value = 0.;
 			box.speed = 1;
 		}
