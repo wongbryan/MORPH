@@ -32,20 +32,19 @@ function ParticleObject(geometry, color, size){
   var floatVertices = new Float32Array(vertices) 
   var targetVertices = new Float32Array(gunVertexCount * 3);
 
-  geom.addAttribute('position', new THREE.BufferAttribute(floatVertices, 3)); //gun
-  geom.addAttribute('targetPosition', new THREE.BufferAttribute(targetVertices, 3)); //sphere
-  geom.attributes['targetPosition'].dynamic = true;
-
   //DEFINE TARGET POSITION ATTRIBUTE
-
   for (var i=0; i<SPHERE_VERTICES.length; i++){
     var target = SPHERE_VERTICES[i];
     var index = i*3; //for every vertex, move forward 3 spots in targetPositions array
 
-    geom.attributes['targetPosition'].array[index] = target.x;
-    geom.attributes['targetPosition'].array[index+1] = target.y;
-    geom.attributes['targetPosition'].array[index+2] = target.z;
+    targetVertices[index] = target.x;
+    targetVertices[index+1] = target.y;
+    targetVertices[index+2] = target.z;
   }
+
+  geom.addAttribute('position', new THREE.BufferAttribute(floatVertices, 3)); //gun
+  geom.addAttribute('targetPosition', new THREE.BufferAttribute(targetVertices, 3)); //sphere
+  geom.attributes['targetPosition'].dynamic = true;
 
   //DEFINE UNIFORMS AND SHADER MATERIAL
 
