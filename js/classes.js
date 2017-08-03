@@ -10,7 +10,7 @@ function ParticleObject(geometry, color, size){
 
   //DEFINE ANGLE ATTRIBUTE
 
-  var angles = new Float32Array(vertices.length);
+  var angles = new Float32Array(geometry.vertices.length);
   for (var i=0; i<vertices.length; i++){
     var angle = Math.random() * 2 * Math.PI;
     angles[i] = angle;
@@ -18,11 +18,9 @@ function ParticleObject(geometry, color, size){
 
   geom.addAttribute('angle', new THREE.BufferAttribute(angles, 1));
 
-  //CREATE TYPED ARRAYS TO MAKE THEM ATTRIBUTES. EACH ARRAY CONTAINS SAME # OF VERTICES
+  //DEFINE TARGET POSITION ATTRIBUTE
 
   var targetVertices = new Float32Array(gunVertexCount * 3);
-
-  //DEFINE TARGET POSITION ATTRIBUTE
 
   for (var i=0; i<SPHERE_VERTICES.length; i++){
     var target = SPHERE_VERTICES[i];
@@ -35,6 +33,17 @@ function ParticleObject(geometry, color, size){
 
   geom.addAttribute('targetPosition', new THREE.BufferAttribute(targetVertices, 3)); //sphere
   geom.attributes['targetPosition'].dynamic = true;
+
+  //REDEFINE POSITION ATTRIBUTE
+  // geom.attributes['position'].dynamic = true;
+
+  // var geomVertices = geom.attributes['position'].array = [];
+  // for (var i=0; i < geometry.vertices.length; i++){
+  //   var index = i*3;
+  //   geomVertices[index] = geometry.vertices[i].x;
+  //   geomVertices[index+1] = geometry.vertices[i].y;
+  //   geomVertices[index+2] = geometry.vertices[i].z;
+  // }
 
   //DEFINE UNIFORMS AND SHADER MATERIAL
 
