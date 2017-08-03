@@ -1,3 +1,5 @@
+const MAX_VERTICES = 200000;
+
 var GEOMETRIES = {
 	Array : [],
 	current : 0

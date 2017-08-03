@@ -19,7 +19,7 @@ function ParticleObject(geometry, color, size){
   //DEFINE ANGLE ATTRIBUTE
   var maxVerticesCount = 20000;
 
-  var angles = new Float32Array(maxVerticesCount);
+  var angles = new Float32Array(MAX_VERTICES);
   for (var i=0; i<maxVerticesCount; i++){
     var angle = Math.random() * 2 * Math.PI;
     angles[i] = angle;
@@ -29,8 +29,8 @@ function ParticleObject(geometry, color, size){
 
   //CREATE TYPED ARRAYS TO MAKE THEM ATTRIBUTES. EACH ARRAY CONTAINS SAME # OF VERTICES
 
-  var floatVertices = new Float32Array(vertices) 
-  var targetVertices = new Float32Array(gunVertexCount * 3);
+  var floatVertices = new Float32Array(MAX_VERTICES) 
+  var targetVertices = new Float32Array(MAX_VERTICES * 3);
 
   geom.addAttribute('position', new THREE.BufferAttribute(floatVertices, 3)); //gun
   geom.addAttribute('targetPosition', new THREE.BufferAttribute(targetVertices, 3)); //sphere
