@@ -5,22 +5,13 @@ function ParticleObject(geometry, color, size){
   var gunVertexCount = geometry.vertices.length;
   var sphereVertexCount = SPHERE_VERTICES.length;
   var geom = new THREE.BufferGeometry();
+  geom.fromGeometry(geometry); //defines the position attribute for us, along with others
   var vertices = [];
 
-  //DEFINE POSITION ATTRIBUTE
-
-  for (var i=0; i<geometry.vertices.length; i++){
-    var vertex = geometry.vertices[i];
-    vertices.push(geometry.vertices[i].x);
-    vertices.push(geometry.vertices[i].y);
-    vertices.push(geometry.vertices[i].z);
-  }
-
   //DEFINE ANGLE ATTRIBUTE
-  var maxVerticesCount = 20000;
 
-  var angles = new Float32Array(maxVerticesCount);
-  for (var i=0; i<maxVerticesCount; i++){
+  var angles = new Float32Array(vertices.length);
+  for (var i=0; i<vertices.length; i++){
     var angle = Math.random() * 2 * Math.PI;
     angles[i] = angle;
   }
@@ -29,12 +20,7 @@ function ParticleObject(geometry, color, size){
 
   //CREATE TYPED ARRAYS TO MAKE THEM ATTRIBUTES. EACH ARRAY CONTAINS SAME # OF VERTICES
 
-  var floatVertices = new Float32Array(vertices) 
   var targetVertices = new Float32Array(gunVertexCount * 3);
-
-  geom.addAttribute('position', new THREE.BufferAttribute(floatVertices, 3)); //gun
-  geom.addAttribute('targetPosition', new THREE.BufferAttribute(targetVertices, 3)); //sphere
-  geom.attributes['targetPosition'].dynamic = true;
 
   //DEFINE TARGET POSITION ATTRIBUTE
 
@@ -42,10 +28,13 @@ function ParticleObject(geometry, color, size){
     var target = SPHERE_VERTICES[i];
     var index = i*3; //for every vertex, move forward 3 spots in targetPositions array
 
-    geom.attributes['targetPosition'].array[index] = target.x;
-    geom.attributes['targetPosition'].array[index+1] = target.y;
-    geom.attributes['targetPosition'].array[index+2] = target.z;
+    targetVertices[index] = target.x;
+    targetVertices[index+1] = target.y;
+    targetVertices[index+2] = target.z;
   }
+
+  geom.addAttribute('targetPosition', new THREE.BufferAttribute(targetVertices, 3)); //sphere
+  geom.attributes['targetPosition'].dynamic = true;
 
   //DEFINE UNIFORMS AND SHADER MATERIAL
 
@@ -59,6 +48,8 @@ function ParticleObject(geometry, color, size){
   };
 
   var particleMat = new THREE.ShaderMaterial({
+    wireframe: true,
+    transparent: true,
     uniforms : uniforms,
     vertexShader : document.getElementById('vertexShader').textContent,
     fragmentShader : document.getElementById('fragmentShader').textContent
@@ -66,7 +57,7 @@ function ParticleObject(geometry, color, size){
 
   //CREATE MESH
 
-  var particleGlobe = new THREE.Points(geom, particleMat);
+  var particleGlobe = new THREE.Mesh(geom, particleMat);
 
   this.mesh = particleGlobe;
 

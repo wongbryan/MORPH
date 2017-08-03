@@ -64,17 +64,17 @@
 	uniform float time;
 	uniform float amplitude;
 	uniform float magnitude;
-	attribute vec3 targetPosition;
-	attribute float angle;
+	// attribute vec3 targetPosition;
+	// attribute float angle;
 
 	void main(){
-		gl_PointSize = 1.;
+		// gl_PointSize = 1.;
 
-		vec3 direction = magnitude*vec3(cos(time+angle), sin(time+angle), cos(time+angle));
+		// vec3 direction = magnitude*vec3(cos(time+angle), sin(time+angle), cos(time+angle));
 
 		vec3 morphedPosition = position; //set morph to initial position
-		morphedPosition += (targetPosition-position) * amplitude; //amplitude changes from 0->1
-		gl_Position = projectionMatrix * modelViewMatrix * vec4(morphedPosition + direction, 1.);
+		morphedPosition += (position) * amplitude; //amplitude changes from 0->1
+		gl_Position = projectionMatrix * modelViewMatrix * vec4(morphedPosition, 1.);
 	}
 </script>
 
@@ -82,7 +82,7 @@
 	uniform vec3 color;
 
 	void main(){
-		gl_FragColor = vec4(vec3(color), 1.);
+		gl_FragColor = vec4(vec3(color), .2);
 	}
 </script>
 
