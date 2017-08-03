@@ -1,3 +1,4 @@
+/* Use max # vertices to avoid having to redefine arrays */
 const MAX_VERTICES = 200000;
 
 var GEOMETRIES = {
