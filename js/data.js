@@ -1,3 +1,6 @@
+/* Use max # vertices to avoid having to redefine arrays */
+const MAX_VERTICES = 100000;
+
 var GEOMETRIES = {
 	Array : [],
 	current : 0

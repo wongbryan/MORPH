@@ -12,7 +12,7 @@ function ParticleObject(geometry, color, size){
 
   //DEFINE ANGLE ATTRIBUTE
 
-  var angles = new Float32Array(vertexCount);
+  var angles = new Float32Array(MAX_VERTICES);
   for (var i=0; i<vertexCount; i++){
     var angle = Math.random() * 2 * Math.PI;
     angles[i] = angle;
@@ -22,7 +22,7 @@ function ParticleObject(geometry, color, size){
 
   //DEFINE TARGET POSITION ATTRIBUTE
 
-  var targetVertices = new Float32Array(vertexCount * 3);
+  var targetVertices = new Float32Array(MAX_VERTICES * 3);
 
   for (var i=0; i<SPHERE_VERTICES.length; i++){
     var target = SPHERE_VERTICES[i];
@@ -58,7 +58,7 @@ function ParticleObject(geometry, color, size){
 
   //CREATE MESH
 
-  var particleGlobe = new THREE.Mesh(geom, particleMat);
+  var particleGlobe = new THREE.Points(geom, particleMat);
 
   this.mesh = particleGlobe;
 
@@ -99,7 +99,7 @@ function ParticleObject(geometry, color, size){
     //Create a new array in case the next geometry has a different # of vertices
     var geom = this.mesh.geometry;
     var currentVertexCount = geom.attributes['position'].count;
-    var newTargets = new Float32Array(currentVertexCount * 3);
+    var newTargets = new Float32Array(MAX_VERTICES * 3);
 
     for (var i=0; i<targetVertices.length; i++){
       var target = targetVertices[i];
