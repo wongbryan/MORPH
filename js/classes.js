@@ -58,7 +58,7 @@ function ParticleObject(geometry, color, size){
 
   //CREATE MESH
 
-  var particleGlobe = new THREE.Mesh(geom, particleMat);
+  var particleGlobe = new THREE.Points(geom, particleMat);
 
   this.mesh = particleGlobe;
 
@@ -92,14 +92,18 @@ function ParticleObject(geometry, color, size){
   }
 
   this.morph = function(geometry){ //pass in a geometry
-    //GET TARGET
-    var targetVertices = geometry.vertices;
-
+    
     //GET CURRENT GEOMETRY, CREATE A NEW ARRAY TO HOLD TARGETS
     //Create a new array in case the next geometry has a different # of vertices
+
     var geom = this.mesh.geometry;
+    var currentVertices = geom.attributes['position'].array;
     var currentVertexCount = geom.attributes['position'].count;
-    var newTargets = new Float32Array(currentVertexCount * 3);
+
+    //GET TARGET
+    var targetVertices = geometry.vertices;
+    var targetVertexCount = targetVertices.length;
+    var newTargets = new Float32Array(targetVertexCount * 3);
 
     for (var i=0; i<targetVertices.length; i++){
       var target = targetVertices[i];
@@ -111,7 +115,37 @@ function ParticleObject(geometry, color, size){
       newTargets[index+2] = target.z;
     }
 
+    //IF TARGET.LENGTH, CHANGE POSITION
+
+    var newPositionArray = new Float32Array(targetVertexCount * 3);
+    var duplicatesIndex = 0;
+    var index = 0;
+
+    for (var i=0; i<targetVertexCount; i++){
+      if (i >= currentVertexCount){ //ONCE PASS MAX # OF VERTICES, FILL WITH DUPLICATE POINTS
+        if (duplicatesIndex >= currentVertexCount)
+          duplicatesIndex = 0;
+        newPositionArray[index] = currentVertices[duplicatesIndex];
+        newPositionArray[index+1] = currentVertices[duplicatesIndex+1];
+        newPositionArray[index+2] = currentVertices[duplicatesIndex+2];
+        duplicatesIndex += 3;
+      }
+
+      newPositionArray[index] = currentVertices[index];
+      newPositionArray[index+1] = currentVertices[index+1];
+      newPositionArray[index+2] = currentVertices[index+2];
+
+      index += 3;
+    }
+
+    console.log(newPositionArray);
+
+    geom.attributes['position'] = new THREE.BufferAttribute(newPositionArray, 3);
+    geom.attributes['position'].dynamic = true;
+    geom.attributes['position'].needsUpdate = true;
+
     geom.attributes['targetPosition'] = new THREE.BufferAttribute(newTargets, 3);
+    geom.attributes['targetPosition'].dynamic = true;
     geom.attributes['targetPosition'].needsUpdate = true;
 
     this.mesh.material.uniforms['amplitude'].value = 0.0;
@@ -123,8 +157,22 @@ function ParticleObject(geometry, color, size){
     tween.easing(TWEEN.Easing.Elastic.Out);
 
     tween.onComplete(function(){
-      geom.attributes['position'] = new THREE.BufferAttribute(newTargets, 3);
-      geom.attributes['position'].needsUpdate = true;
+      // console.log(geom.attributes['position'].count);
+      // console.log(newTargets.length/3);
+      // geom.attributes['position'].dynamic = true;
+      // geom.attributes['position'] = new THREE.BufferAttribute(newTargets, 3);
+      // geom.attributes['position'].count = newTargets.length/3;
+      // geom.attributes['position'].needsUpdate = true;
+
+      var angles = new Float32Array(targetVertexCount);
+      for (var i=0; i<targetVertexCount; i++){
+        var angle = Math.random() * 2 * Math.PI;
+        angles[i] = angle;
+      }
+
+      geom.attributes['angle'] = new THREE.BufferAttribute(angles, 1);
+      geom.attributes['angle'].dynamic = true;
+      geom.attributes['angle'].needsUpdate = true;
     });
 
     tween.onUpdate(function(){
