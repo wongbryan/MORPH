@@ -1,9 +1,12 @@
+/* Use max # vertices to avoid having to redefine arrays */
+const MAX_VERTICES = 200000;
+
 var GEOMETRIES = {
 	Array : [],
 	current : 0
 };
 
-var sphereGeom = new THREE.SphereGeometry(2.5, 128, 128);
+var sphereGeom = new THREE.SphereGeometry(2.5, 256, 256);
 var SPHERE_VERTICES = sphereGeom.vertices;
 GEOMETRIES.Array.push(sphereGeom);
 
