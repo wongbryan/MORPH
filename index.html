@@ -68,7 +68,7 @@
 	attribute float angle;
 
 	void main(){
-		gl_PointSize = 1.;
+		gl_PointSize = 1.5;
 
 		vec3 direction = magnitude*vec3(cos(time+angle), sin(time+angle), cos(time+angle));
 
@@ -146,10 +146,10 @@
 
 		if (intersects.length > 0){
 			var random = Math.floor(Math.random() * 3);
-			while (random == TARGETS.current)
+			while (random == TARGET_BUFFERS.current)
 				random = Math.floor(Math.random() * 3);
-			box.morph(TARGETS.Array[random]);
-			TARGETS.current = random;
+			box.morph(TARGET_BUFFERS.Array[random]);
+			TARGET_BUFFERS.current = random;
 		}
 	}
 
@@ -231,6 +231,8 @@
 					tetsuoTargets[index+1] = target.y;
 					tetsuoTargets[index+2] = target.z;
 				}
+				var tetsuoTargetAttributeBuffer = new THREE.BufferAttribute(tetsuoTargets, 3);
+				TARGET_BUFFERS.Array.push(tetsuoTargetAttributeBuffer);
 				TARGETS.Array.push(tetsuoTargets);
 
 			    var loading = document.getElementById('loading');
@@ -269,12 +271,12 @@
 		}
 		else if (data < 100){
 			box.highlight(COLORS.Red);
-			box.mesh.material.uniforms.magnitude.value = data/7500;
+			box.mesh.material.uniforms.magnitude.value = data/200;
 			box.mesh.material.uniforms.opacity.value = data/750;
 			box.speed = 1.5;
 		}
 		else{
-			box.mesh.material.uniforms.magnitude.value = data/5500;
+			box.mesh.material.uniforms.magnitude.value = data/150;
 			box.mesh.material.uniforms.opacity.value = data/550;
 			box.speed = data/55;
 		}

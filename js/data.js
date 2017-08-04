@@ -1,5 +1,5 @@
 /* Use max # vertices to avoid having to redefine arrays */
-const MAX_VERTICES = 2000000;
+const MAX_VERTICES = 1500000;
 
 var GEOMETRIES = {
 	Array : [],
@@ -19,6 +19,11 @@ var TARGETS = {
 	current : 0
 };
 
+var TARGET_BUFFERS = {
+	Array: [],
+	current : 0
+};
+
 var sphereTargets = new Float32Array(MAX_VERTICES*3);
 for (var i=0; i<sphereGeom.vertices.length; i++){
 	var target = SPHERE_VERTICES[i];
@@ -28,7 +33,10 @@ for (var i=0; i<sphereGeom.vertices.length; i++){
 	sphereTargets[index+1] = target.y;
 	sphereTargets[index+2] = target.z;
 }
+var sphereTargetAttributeBuffer = new THREE.BufferAttribute(sphereTargets, 3);
+TARGET_BUFFERS.Array.push(sphereTargetAttributeBuffer);
 TARGETS.Array.push(sphereTargets);
+
 
 var boxTargets = new Float32Array(MAX_VERTICES*3);
 for (var i=0; i<boxGeom.vertices.length; i++){
@@ -39,6 +47,9 @@ for (var i=0; i<boxGeom.vertices.length; i++){
 	boxTargets[index+1] = target.y;
 	boxTargets[index+2] = target.z;
 }
+var boxTargetAttributeBuffer = new THREE.BufferAttribute(boxTargets, 3);
+TARGET_BUFFERS.Array.push(boxTargetAttributeBuffer);
 TARGETS.Array.push(boxTargets);
 
 var tetsuoTargets;
+

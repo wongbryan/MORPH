@@ -45,7 +45,7 @@ function ParticleObject(geometry, color, size){
     time : { type : 'f', value : 0.0 },
     amplitude : { type : 'f', value : 0.0 }, //how far along the morph it is
     color : { type : 'v3', value : COLORS.Red},
-    magnitude : { type : 'f', value : 5.},
+    magnitude : { type : 'f', value : 1.},
     opacity : { type : 'f', value : 1.}
   };
 
@@ -92,7 +92,7 @@ function ParticleObject(geometry, color, size){
     tween.start();
   }
 
-  this.morph = function(targetArray){ //pass in an array of floats (new vertices)
+  this.morph = function(targetBuffer, targetGeometry){ //pass in an array of floats (new vertices)
     //GET TARGET
     var targetVertices = geometry.vertices;
 
@@ -100,10 +100,26 @@ function ParticleObject(geometry, color, size){
     //Create a new array in case the next geometry has a different # of vertices
     var geom = this.mesh.geometry;
     var currentVertexCount = geom.attributes['position'].count;
-    var newTargets = targetArray;
 
-    geom.attributes['targetPosition'] = new THREE.BufferAttribute(newTargets, 3);
+    var originalPositionBufferData = new Float32Array(currentVertexCount*3);
+    var originalPositionBuffer = geom.attributes['position'].array;
+
+    console.log(originalPositionBuffer);
+    //copy the position buffer so we have access to it after using fromGeometry()
+    for(var i=0; i<originalPositionBuffer.length; i++){
+      originalPositionBufferData[i] = originalPositionBuffer[i];
+    }
+
+    //copy colors, uvs, etc. 
+
+    geom.fromGeometry(targetGeometry);
+
+    geom.attributes['targetPosition'] = targetBuffer;
     geom.attributes['targetPosition'].needsUpdate = true;
+
+    geom.attributes['position'] = new THREE.BufferAttribute(originalPositionBufferData, 3);
+    geom.attributes['position'].needsUpdate = true;
+    geom.attributes['position'].dynamic = true;
 
     this.mesh.material.uniforms['amplitude'].value = 0.0;
 
@@ -114,7 +130,8 @@ function ParticleObject(geometry, color, size){
     tween.easing(TWEEN.Easing.Elastic.Out);
 
     tween.onComplete(function(){
-      geom.attributes['position'] = new THREE.BufferAttribute(newTargets, 3);
+      geom.attributes['position'] = targetBuffer;
+      geom.attributes['position'].dynamic = true;
       geom.attributes['position'].needsUpdate = true;
     });
 
@@ -126,7 +143,7 @@ function ParticleObject(geometry, color, size){
   }
 
   this.update = function(){
-    // this.mesh.material.uniforms['time'].value += .1;
+    this.mesh.material.uniforms['time'].value += .1;
     // this.mesh.rotation.y += .0025*this.speed*this.speed*this.speed;
     // this.mesh.rotation.x += .0025*this.speed*this.speed*this.speed;
   }
