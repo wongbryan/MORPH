@@ -129,7 +129,78 @@ function ParticleObject(geometry, color, size){
   }
 }
 
+var Rock = function(scale, x, y, z){
+  this.loaded = false;
 
+  var group = new THREE.Group();
+
+  /*make inner cube*/
+
+  var cubeGeom = new THREE.BoxGeometry(1, 1, 1);
+  var cubeMat = new THREE.MeshBasicMaterial({color: 0xffffff});
+  var cube = new THREE.Mesh(cubeGeom, cubeMat);
+  cube.scale.set(scale, scale, scale);
+  group.add(cube);
+
+  /*make outer waves emanation*/
+
+  var sphereGeom = new THREE.SphereGeometry(1.5, 64, 64);
+  var wavesGeom = new THREE.BufferGeometry();
+  wavesGeom.fromGeometry(sphereGeom);
+  var vertexPositions = wavesGeom.attributes['position'].array;
+  var vertexThetas = new Float32Array(vertexPositions.length/3); //assign a starting angle to each vertex
+  var vertexPhis = new Float32Array(vertexPositions.length/3);
+  var cycle = 64*64/2; //number of vertices in a single sin wave
+  for (var i=0; i<vertexPositions.length/3; i++){
+    // vertexThetas[i] = Math.random() * 2 * Math.PI;
+    vertexThetas[i] = i*(2 * Math.PI / cycle); //0->2PI
+    vertexPhis[i] = i*(Math.PI / cycle)//0->PI
+  }
+  wavesGeom.addAttribute('theta', new THREE.BufferAttribute(vertexThetas, 1));
+  wavesGeom.addAttribute('phi', new THREE.BufferAttribute(vertexPhis, 1));
+
+  var wavesMat;
+  var waves;
+
+  var _this = this;
+  var texture = new THREE.TextureLoader().load(
+    'assets/rgb texture.png',
+
+    function(texture){
+      wavesMat = new THREE.ShaderMaterial({
+        transparent: true,
+        wireframe: true,
+        uniforms : {
+          time : { type : 'f', value : 0.0 },
+          opacity : { type : 'f', value : .05},
+          noise : { type : 't', value : texture},
+          amplitude : { type : 'f', value : 5.},
+          speed : { type : 'f', value : 25. },
+          pointSize : { type : 'f', value : 2.5},
+          color : { type : 'v3', value : COLORS.Red}
+        },
+        vertexShader : document.getElementById('wavesVertex').textContent,
+        fragmentShader : document.getElementById('wavesFragment').textContent
+      });
+
+      waves = new THREE.Points(wavesGeom, wavesMat);
+      waves.scale.set(scale, scale, scale);
+      group.add(waves);
+      _this.waves = waves;
+      _this.loaded = true;
+     }
+  );
+
+  this.mesh = group;
+  this.cube = cube;
+  this.waves;
+
+  this.update = function(){
+    if (!this.loaded)
+      return;
+    this.waves.material.uniforms.time.value += .01;
+  }
+}
 
 
 
