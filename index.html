@@ -68,7 +68,7 @@
 	attribute float angle;
 
 	void main(){
-		gl_PointSize = 1.;
+		gl_PointSize = 1.7;
 
 		vec3 direction = magnitude*vec3(cos(time+angle), sin(time+angle), cos(time+angle));
 
@@ -256,7 +256,7 @@
 		// controls.update(delta);
 		controls.update();
 
-		camera.lookAt(new THREE.Vector3(0, 0, 0));
+		camera.lookAt(new THREE.Vector3(0, 20, 0));
 		if (!loadedBox)
 			return;
 
