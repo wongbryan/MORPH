@@ -1,5 +1,5 @@
 /* Use max # vertices to avoid having to redefine arrays */
-const MAX_VERTICES = 1500000;
+const MAX_VERTICES = 2000000;
 
 var GEOMETRIES = {
 	Array : [],
@@ -20,8 +20,8 @@ var TARGETS = {
 };
 
 var TARGET_BUFFERS = {
-	Array: [],
-	current : 0
+	Array : [],
+	current: 0
 };
 
 var sphereTargets = new Float32Array(MAX_VERTICES*3);
@@ -33,10 +33,9 @@ for (var i=0; i<sphereGeom.vertices.length; i++){
 	sphereTargets[index+1] = target.y;
 	sphereTargets[index+2] = target.z;
 }
-var sphereTargetAttributeBuffer = new THREE.BufferAttribute(sphereTargets, 3);
-TARGET_BUFFERS.Array.push(sphereTargetAttributeBuffer);
+var sphereTargetBuffer = new THREE.BufferAttribute(sphereTargets, 3);
 TARGETS.Array.push(sphereTargets);
-
+TARGET_BUFFERS.Array.push(sphereTargetBuffer);
 
 var boxTargets = new Float32Array(MAX_VERTICES*3);
 for (var i=0; i<boxGeom.vertices.length; i++){
@@ -47,9 +46,11 @@ for (var i=0; i<boxGeom.vertices.length; i++){
 	boxTargets[index+1] = target.y;
 	boxTargets[index+2] = target.z;
 }
-var boxTargetAttributeBuffer = new THREE.BufferAttribute(boxTargets, 3);
-TARGET_BUFFERS.Array.push(boxTargetAttributeBuffer);
+var boxTargetBuffer = new THREE.BufferAttribute(boxTargets, 3);
+TARGET_BUFFERS.Array.push(boxTargetBuffer);
 TARGETS.Array.push(boxTargets);
 
 var tetsuoTargets;
+var tetsuoTargetBuffer;
+
 
