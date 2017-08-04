@@ -44,9 +44,9 @@ function ParticleObject(geometry, color, size){
   var uniforms = {
     time : { type : 'f', value : 0.0 },
     amplitude : { type : 'f', value : 0.0 }, //how far along the morph it is
-    color : { type : 'v3', value : COLORS.Black},
+    color : { type : 'v3', value : COLORS.Red},
     magnitude : { type : 'f', value : 5.},
-    opacity : { type : 'f', value : .1}
+    opacity : { type : 'f', value : 1.}
   };
 
   var particleMat = new THREE.ShaderMaterial({
@@ -59,7 +59,7 @@ function ParticleObject(geometry, color, size){
 
   //CREATE MESH
 
-  var particleGlobe = new THREE.Points(geom, particleMat);
+  var particleGlobe = new THREE.Mesh(geom, particleMat);
 
   this.mesh = particleGlobe;
 
@@ -92,7 +92,7 @@ function ParticleObject(geometry, color, size){
     tween.start();
   }
 
-  this.morph = function(geometry){ //pass in a geometry
+  this.morph = function(targetArray){ //pass in an array of floats (new vertices)
     //GET TARGET
     var targetVertices = geometry.vertices;
 
@@ -100,17 +100,7 @@ function ParticleObject(geometry, color, size){
     //Create a new array in case the next geometry has a different # of vertices
     var geom = this.mesh.geometry;
     var currentVertexCount = geom.attributes['position'].count;
-    var newTargets = new Float32Array(MAX_VERTICES * 3);
-
-    for (var i=0; i<targetVertices.length; i++){
-      var target = targetVertices[i];
-      var index = i*3;
-
-      //UPDATE TARGET VERTICES
-      newTargets[index] = target.x;
-      newTargets[index+1] = target.y;
-      newTargets[index+2] = target.z;
-    }
+    var newTargets = targetArray;
 
     geom.attributes['targetPosition'] = new THREE.BufferAttribute(newTargets, 3);
     geom.attributes['targetPosition'].needsUpdate = true;
@@ -136,9 +126,9 @@ function ParticleObject(geometry, color, size){
   }
 
   this.update = function(){
-    this.mesh.material.uniforms['time'].value += .1;
-    this.mesh.rotation.y += .0025*this.speed*this.speed*this.speed;
-    this.mesh.rotation.x += .0025*this.speed*this.speed*this.speed;
+    // this.mesh.material.uniforms['time'].value += .1;
+    // this.mesh.rotation.y += .0025*this.speed*this.speed*this.speed;
+    // this.mesh.rotation.x += .0025*this.speed*this.speed*this.speed;
   }
 }
 
