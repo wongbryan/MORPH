@@ -145,8 +145,11 @@ var Rock = function(scale, x, y, z){
   /*make outer waves emanation*/
 
   var sphereGeom = new THREE.SphereGeometry(1.5, 64, 64);
+  var torusGeom = new THREE.TorusGeometry(2, .5, 32, 32);
+  var boxGeom = new THREE.BoxGeometry(1.5, 2.0, 1.5, 64, 64);
+  var coneGeom = new THREE.ConeGeometry(2, 2, 64);
   var wavesGeom = new THREE.BufferGeometry();
-  wavesGeom.fromGeometry(sphereGeom);
+  wavesGeom.fromGeometry(coneGeom);
   var vertexPositions = wavesGeom.attributes['position'].array;
   var vertexThetas = new Float32Array(vertexPositions.length/3); //assign a starting angle to each vertex
   var vertexPhis = new Float32Array(vertexPositions.length/3);
@@ -163,33 +166,27 @@ var Rock = function(scale, x, y, z){
   var waves;
 
   var _this = this;
-  var texture = new THREE.TextureLoader().load(
-    'assets/rgb texture.png',
 
-    function(texture){
-      wavesMat = new THREE.ShaderMaterial({
-        transparent: true,
-        wireframe: true,
-        uniforms : {
-          time : { type : 'f', value : 0.0 },
-          opacity : { type : 'f', value : .05},
-          noise : { type : 't', value : texture},
-          amplitude : { type : 'f', value : 5.},
-          speed : { type : 'f', value : 25. },
-          pointSize : { type : 'f', value : 2.5},
-          color : { type : 'v3', value : COLORS.Red}
-        },
-        vertexShader : document.getElementById('wavesVertex').textContent,
-        fragmentShader : document.getElementById('wavesFragment').textContent
-      });
+  wavesMat = new THREE.ShaderMaterial({
+    transparent: true,
+    wireframe: true,
+    uniforms : {
+      time : { type : 'f', value : 0.0 },
+      opacity : { type : 'f', value : .2},
+      amplitude : { type : 'f', value : 5.},
+      speed : { type : 'f', value : 25. },
+      pointSize : { type : 'f', value : 2.0},
+      color : { type : 'v3', value : COLORS.Red}
+    },
+    vertexShader : document.getElementById('wavesVertex').textContent,
+    fragmentShader : document.getElementById('wavesFragment').textContent
+  });
 
-      waves = new THREE.Points(wavesGeom, wavesMat);
-      waves.scale.set(scale, scale, scale);
-      group.add(waves);
-      _this.waves = waves;
-      _this.loaded = true;
-     }
-  );
+  waves = new THREE.Points(wavesGeom, wavesMat);
+  waves.scale.set(scale, scale, scale);
+  group.add(waves);
+  this.waves = waves;
+  this.loaded = true;
 
   this.mesh = group;
   this.cube = cube;
