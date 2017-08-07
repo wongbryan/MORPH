@@ -92,7 +92,7 @@ function ParticleObject(geometry, color, size){
     tween.start();
   }
 
-  this.morph = function(geometry){ //pass in a geometry
+  this.morph = function(targetBufferAttribute){ //pass in a geometry
     //GET TARGET
     var targetVertices = geometry.vertices;
 
@@ -100,19 +100,8 @@ function ParticleObject(geometry, color, size){
     //Create a new array in case the next geometry has a different # of vertices
     var geom = this.mesh.geometry;
     var currentVertexCount = geom.attributes['position'].count;
-    var newTargets = new Float32Array(MAX_VERTICES * 3);
-
-    for (var i=0; i<targetVertices.length; i++){
-      var target = targetVertices[i];
-      var index = i*3;
-
-      //UPDATE TARGET VERTICES
-      newTargets[index] = target.x;
-      newTargets[index+1] = target.y;
-      newTargets[index+2] = target.z;
-    }
-
-    geom.attributes['targetPosition'] = new THREE.BufferAttribute(newTargets, 3);
+  
+    geom.attributes['targetPosition'] = targetBufferAttribute;
     geom.attributes['targetPosition'].needsUpdate = true;
 
     this.mesh.material.uniforms['amplitude'].value = 0.0;
@@ -124,7 +113,7 @@ function ParticleObject(geometry, color, size){
     tween.easing(TWEEN.Easing.Elastic.Out);
 
     tween.onComplete(function(){
-      geom.attributes['position'] = new THREE.BufferAttribute(newTargets, 3);
+      geom.attributes['position'] = targetBufferAttribute;
       geom.attributes['position'].needsUpdate = true;
     });
 

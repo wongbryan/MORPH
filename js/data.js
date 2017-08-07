@@ -52,4 +52,5 @@ TARGET_BUFFERS.Array.push(boxTargetAttributeBuffer);
 TARGETS.Array.push(boxTargets);
 
 var tetsuoTargets;
+var tetsuoTargetAttributeBuffer;
 

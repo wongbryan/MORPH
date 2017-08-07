@@ -115,25 +115,7 @@
 	};
 
 	var loadedBox = false;
-
-	function onMouseMove() {
-		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-		raycaster.setFromCamera(mouse, camera);
-
-		var intersects = raycaster.intersectObjects(boxMeshesArray, false);
-
-		if (!loadedBox)
-			return;
-
-		if (intersects.length > 0){
-			box.highlight(COLORS.Red);
-		}
-		else{
-			box.highlight(COLORS.Black);
-		}
-	}
-
+	
 	function onMouseDown(){
 		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -205,7 +187,7 @@
 		var geom;
 		var modelLoader = new THREE.JSONLoader();
 		modelLoader.load(
-			'assets/tetsuo.json',
+			'assets/tetsuo-transform.json',
 
 			function(geometry, materials){
 				geom = geometry;
@@ -231,7 +213,7 @@
 					tetsuoTargets[index+1] = target.y;
 					tetsuoTargets[index+2] = target.z;
 				}
-				var tetsuoTargetAttributeBuffer = new THREE.BufferAttribute(tetsuoTargets, 3);
+				tetsuoTargetAttributeBuffer = new THREE.BufferAttribute(tetsuoTargets, 3);
 				TARGET_BUFFERS.Array.push(tetsuoTargetAttributeBuffer);
 				TARGETS.Array.push(tetsuoTargets);
 
