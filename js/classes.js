@@ -131,6 +131,30 @@ function ParticleObject(geometry, color, size){
   }
 }
 
+function ForceField(radius, tubeWidth){
+  var geom = new THREE.TorusGeometry(radius, tubeWidth, 128, 128);
+  var texture = new THREE.TextureLoader().load('assets/rgb texture.png');
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  var mat = new THREE.ShaderMaterial({
+    // wireframe: true,
+    transparent: true,
+    uniforms : {
+      time : { type : 'f', value : 0. },
+      speed: { type : 'f', value : 3. },
+      magnitude : { type : 'f', value : 5.},
+      noise : { type : 't', value : texture }
+    },
+    vertexShader : document.getElementById('forceVertex').textContent,
+    fragmentShader : document.getElementById('forceFragment').textContent
+  });
+
+  var mesh = new THREE.Mesh(geom, mat);
+
+  this.mesh = mesh;
+  this.update = function(){
+    this.mesh.material.uniforms.time.value += .0005;
+  }
+}
 
 
 
