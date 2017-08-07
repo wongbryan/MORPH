@@ -44,9 +44,9 @@ function ParticleObject(geometry, color, size){
   var uniforms = {
     time : { type : 'f', value : 0.0 },
     amplitude : { type : 'f', value : 0.0 }, //how far along the morph it is
-    color : { type : 'v3', value : COLORS.Black},
-    magnitude : { type : 'f', value : 5.},
-    opacity : { type : 'f', value : .1}
+    color : { type : 'v3', value : COLORS.Red},
+    magnitude : { type : 'f', value : 1.},
+    opacity : { type : 'f', value : 1.}
   };
 
   var particleMat = new THREE.ShaderMaterial({
@@ -125,9 +125,9 @@ function ParticleObject(geometry, color, size){
   }
 
   this.update = function(){
-    this.mesh.material.uniforms['time'].value += .1;
-    this.mesh.rotation.y += .0025*this.speed*this.speed*this.speed;
-    this.mesh.rotation.x += .0025*this.speed*this.speed*this.speed;
+    // this.mesh.material.uniforms['time'].value += .1;
+    // this.mesh.rotation.y += .0025*this.speed*this.speed*this.speed;
+    // this.mesh.rotation.x += .0025*this.speed*this.speed*this.speed;
   }
 }
 
