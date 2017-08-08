@@ -1,5 +1,5 @@
 /* Use max # vertices to avoid having to redefine arrays */
-const MAX_VERTICES = 1500000;
+const MAX_VERTICES = 200000;
 
 var GEOMETRIES = {
 	Array : [],

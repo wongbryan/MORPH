@@ -149,6 +149,8 @@
 
 	var forceField;
 
+	var nodes = [];
+
 	var boxMeshesArray = [];
 
 	const COLORS = {
@@ -225,13 +227,25 @@
 		});
 
 		forceField = new ForceField(5, 2);
-		forceField.mesh.position.set(25, 20, 20);
+		forceField.mesh.position.set(10, 20, 25);
+		nodes.push(forceField);
 		scene.add(forceField.mesh);
+
+		var node1, node2, node3;
+		node1 = new ForceField(5, 2); //placeholders
+		node1.mesh.position.set(10, 0, -40);
+		scene.add(node1.mesh);
+		node2 = new ForceField(5, 2); //placeholders
+		node2.mesh.position.set(-20, -30, 7);
+		scene.add(node2.mesh);
+		node3 = new ForceField(5, 2); //placeholders
+		node3.mesh.position.set(0, 45, -25);
+		scene.add(node3.mesh);
 
 		var geom;
 		var modelLoader = new THREE.JSONLoader();
 		modelLoader.load(
-			'assets/tetsuo.json',
+			'assets/tetsuo-compressed.json',
 
 			function(geometry, materials){
 				geom = geometry;
@@ -270,7 +284,7 @@
 
 		window.addEventListener('resize', resize);
 		// window.addEventListener('mousemove', onMouseMove);
-		renderer.domElement.addEventListener('mousedown', onMouseDown);
+		// renderer.domElement.addEventListener('mousedown', onMouseDown);
 	}
 
 	function update(){

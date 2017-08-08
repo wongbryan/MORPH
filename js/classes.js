@@ -166,11 +166,22 @@ function ForceField(radius, tubeWidth){
     fragmentShader : document.getElementById('forceFragment').textContent
   });
 
+  var cubeGeom = new THREE.BoxGeometry(1, 1, 1);
+  var cubeMat = new THREE.MeshPhongMaterial({
+    color : 0xffffff,
+    transparent: true,
+    opacity: .95
+  });
+  var s = 7;
+  var cube = new THREE.Mesh(cubeGeom, cubeMat);
+  cube.scale.set(s, s, s);
+
   var mesh = new THREE.Mesh(geom, mat);
 
-  this.mesh = mesh;
+  // this.mesh = mesh;
+  this.mesh = cube;
   this.update = function(){
-    this.mesh.material.uniforms.time.value += .0005;
+    // this.mesh.material.uniforms.time.value += .0005;
   }
 }
 
