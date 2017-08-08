@@ -96,23 +96,34 @@
 <script type="vsh" id="forceVertex">
 	uniform float time;
 	uniform float speed;
-	uniform float magnitude;
-	uniform sampler2D noise;
+	uniform float amplitude;
+	uniform float pointSize;
+
+	attribute float theta;
+	attribute float phi;
 
 	varying vec2 vUv;
+	varying float posY;
 
 	void main(){
 		vUv = uv;
-		vec4 color = texture2D(noise, uv);
-		vec4 color2 = texture2D(noise, vec2(color.r, color.b) + time*speed);
+		posY = position.y;
 
-		gl_Position = projectionMatrix * modelViewMatrix * vec4(position+ magnitude*color2.rgb, 1.);
+		float updatedTheta = theta + speed*time;
+		float updatedPhi = phi + speed*time;
+
+		vec3 direction = vec3(cos(updatedTheta)/updatedTheta, sin(updatedTheta)/updatedTheta, 0);
+
+		gl_Position = projectionMatrix * modelViewMatrix * vec4(position + amplitude*direction, 1.);
 	}
 </script>
 
 <script type="fsh" id="forceFragment">
+	uniform float opacity; 
+	uniform vec3 color;
+	varying float posY;
 	void main(){
-		gl_FragColor = vec4(1., 1., 1., .1);
+		gl_FragColor = vec4(1., 1., 1., opacity);
 	}
 </script>
 
@@ -213,7 +224,7 @@
 			// sound.play();
 		});
 
-		forceField = new ForceField(4, 10);
+		forceField = new ForceField(5, 2);
 		forceField.mesh.position.set(25, 20, 20);
 		scene.add(forceField.mesh);
 

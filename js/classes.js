@@ -132,17 +132,35 @@ function ParticleObject(geometry, color, size){
 }
 
 function ForceField(radius, tubeWidth){
-  var geom = new THREE.TorusGeometry(radius, tubeWidth, 128, 128);
+  var torusGeom = new THREE.TorusGeometry(radius, tubeWidth, 64, 64);
+  var sphereGeom = new THREE.SphereGeometry(5, 64, 64);
+  var geom = new THREE.BufferGeometry();
+  geom.fromGeometry(torusGeom);
+
+  var vertexCount = geom.attributes.position.count;
+  var thetas = new Float32Array(vertexCount);
+  var phis = new Float32Array(vertexCount);
+  var cycle = 64*64; //number of vertices in a single sin wave
+  for (var i=0; i<vertexCount; i++){
+    thetas[i] = i*(2 * Math.PI / cycle); //0->2PI
+    phis[i] = i*(Math.PI / cycle)//0->PI
+  }
+
+  geom.addAttribute('theta', new THREE.BufferAttribute(thetas, 1));
+  geom.addAttribute('phi', new THREE.BufferAttribute(thetas, 1));
+
   var texture = new THREE.TextureLoader().load('assets/rgb texture.png');
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   var mat = new THREE.ShaderMaterial({
-    // wireframe: true,
+    wireframe: true,
     transparent: true,
     uniforms : {
-      time : { type : 'f', value : 0. },
-      speed: { type : 'f', value : 3. },
-      magnitude : { type : 'f', value : 5.},
-      noise : { type : 't', value : texture }
+      time : { type : 'f', value : 0.0 },
+      opacity : { type : 'f', value : .2},
+      amplitude : { type : 'f', value : 20.},
+      speed : { type : 'f', value : 25. },
+      pointSize : { type : 'f', value : 2.0},
+      color : { type : 'v3', value : new THREE.Color(0xffffff)}
     },
     vertexShader : document.getElementById('forceVertex').textContent,
     fragmentShader : document.getElementById('forceFragment').textContent
