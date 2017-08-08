@@ -195,10 +195,8 @@
 		renderer.setSize( window.innerWidth, window.innerHeight);
 		renderer.setClearColor(COLORS.Black);
 		container.appendChild( renderer.domElement );
-		
-		var listener = new THREE.AudioListener();
+	
 		camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-		camera.add(listener);
 		camera.position.set(0, 0, 100);
 
 		// controls = new THREE.FirstPersonControls(camera, renderer.domElement);
@@ -217,14 +215,6 @@
 
 		scene.add(ambientLight);
 		scene.add(directionalLight);
-
-		var audioLoader = new THREE.AudioLoader();
-		sound = new THREE.PositionalAudio(listener);
-		audioLoader.load('assets/rain.mp3', function(buffer){
-			sound.setBuffer(buffer);
-			sound.setRefDistance(20);
-			// sound.play();
-		});
 
 		forceField = new ForceField(5, 2);
 		forceField.mesh.position.set(10, 20, 25);
@@ -279,8 +269,6 @@
 			    document.body.removeChild(loading);
 			}
 		)
-
-	    analyser = new THREE.AudioAnalyser(sound, 32);
 
 		window.addEventListener('resize', resize);
 		// window.addEventListener('mousemove', onMouseMove);
