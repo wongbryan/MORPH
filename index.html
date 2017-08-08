@@ -146,17 +146,21 @@
 	var box;
 	var analyser;
 	var sound;
+	var directionalLightHelper;
 
 	var forceField;
 
 	var nodes = [];
 
+	var plane;
+
 	var boxMeshesArray = [];
 
 	const COLORS = {
-		Black: new THREE.Color(0x1c1c1c),
-		Red: new THREE.Color(0xcc390e),
-		Gray: new THREE.Color(0x565656)
+		Black : new THREE.Color(0x110000),
+		BlackHighlight : new THREE.Color(0x636363),
+		Red : new THREE.Color(0xcc390e),
+		White : new THREE.Color(0xffffff)
 	};
 
 	var loadedBox = false;
@@ -208,13 +212,20 @@
 
 		scene = new THREE.Scene();
 
-		var directionalLight = new THREE.DirectionalLight(0x111111, .7);
-		directionalLight.position.set(-100, 100, 0);
-		directionalLight.castShadow = true;
-		var ambientLight = new THREE.AmbientLight(0x404040);
+		var ambientLight = new THREE.AmbientLight( 0x3f2806 );
+		scene.add( ambientLight );
 
-		scene.add(ambientLight);
-		scene.add(directionalLight);
+		var platformLight = new THREE.PointLight( 0xffaa00, 1, 5000 );
+		scene.add( platformLight );
+
+		var sunLight = new THREE.SpotLight( 0xffffff, 1.0, 0, Math.PI/2);
+		var sunLightHelper = new THREE.SpotLightHelper(sunLight, 10);
+		scene.add(sunLightHelper);
+		sunLight.position.set( 1000, 2000, 1000 );
+		sunLight.castShadow = true;
+		scene.add(sunLight);
+
+		//SET UP NODES
 
 		forceField = new ForceField(5, 2);
 		forceField.mesh.position.set(10, 20, 25);
@@ -232,6 +243,8 @@
 		node3.mesh.position.set(0, 45, -25);
 		scene.add(node3.mesh);
 
+		//SET UP MODEL
+
 		var geom;
 		var modelLoader = new THREE.JSONLoader();
 		modelLoader.load(
@@ -240,10 +253,8 @@
 			function(geometry, materials){
 				geom = geometry;
 				box = new ParticleObject(geom, 0x486686, .05);
-			    box.mesh.position.set(0, 0, 0);
 			    // box.mesh.scale.set(5, 5, 5);
 			    box.mesh.rotation.y = 3.5*Math.PI/2;
-			    box.mesh.add(sound);
 			    boxMeshesArray.push(box.mesh);
 			    scene.add( box.mesh );
 			    loadedBox = true;
@@ -262,6 +273,7 @@
 					tetsuoTargets[index+2] = target.z;
 				}
 				tetsuoTargetAttributeBuffer = new THREE.BufferAttribute(tetsuoTargets, 3);
+
 				TARGET_BUFFERS.Array.push(tetsuoTargetAttributeBuffer);
 				TARGETS.Array.push(tetsuoTargets);
 
@@ -269,6 +281,25 @@
 			    document.body.removeChild(loading);
 			}
 		)
+
+		//SET UP DOME
+
+		var modelHeight = 144; //approximation
+
+		var cyberTexture = new THREE.TextureLoader().load('assets/ground-texture.jpg');
+		var planeGeom = new THREE.PlaneGeometry(1000, 1000);
+		var planeMat = new THREE.MeshPhongMaterial({
+			shininess: 1,
+			color: 0xffffff,
+			specular: 0xff0000,
+			map: cyberTexture,
+			side: THREE.DoubleSide
+		});
+		plane = new THREE.Mesh(planeGeom, planeMat);
+		plane.position.set(0, -72, 0);
+		plane.rotation.x = Math.PI/2;
+
+		scene.add(plane);
 
 		window.addEventListener('resize', resize);
 		// window.addEventListener('mousemove', onMouseMove);
