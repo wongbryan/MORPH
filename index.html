@@ -130,6 +130,7 @@
 <script src="bower_components/tween.js/src/Tween.js"></script>
 <script src="bower_components/three.js/build/three.js"></script>
 <script src="bower_components/three.js/examples/js/Mirror.js"></script>
+<script src="bower_components/three.js/examples/js/WaterShader.js"></script>
 <script src="bower_components/three.js/examples/js/controls/TrackballControls.js"></script>
 <script src="bower_components/three.js/examples/js/controls/FirstPersonControls.js"></script>
 <script src="js/data.js"></script>
@@ -154,6 +155,7 @@
 	var nodes = [];
 
 	var plane;
+	var water;
 
 	var boxMeshesArray = [];
 
@@ -270,7 +272,28 @@
 		plane.position.set(0, -72, 0);
 		plane.rotation.x = -Math.PI/2;
 
-		scene.add(plane);
+		// scene.add(plane);
+
+		var waterNormals = new THREE.TextureLoader().load('assets/waternormals.jpg');
+		waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
+
+		water = new THREE.Water( renderer, camera, scene, {
+			textureWidth: 512,
+			textureHeight: 512,
+			waterNormals: waterNormals,
+			alpha: 	1.0,
+			sunDirection: sunLight.position.clone().normalize(),
+			sunColor: 0xffffff,
+			waterColor: COLORS.Black,
+			distortionScale: 0.,
+			fog: scene.fog != undefined
+		} );
+		var waterMesh = new THREE.Mesh(planeGeom, water.material);
+		waterMesh.add(water);
+		waterMesh.rotation.x = -Math.PI/2;
+		waterMesh.position.set(0, -72, 0);
+
+		scene.add(waterMesh);
 
 		window.addEventListener('resize', resize);
 		// window.addEventListener('mousemove', onMouseMove);
@@ -285,6 +308,9 @@
 		// camera.lookAt(new THREE.Vector3(0, 0, 0));
 		if (!loadedBox)
 			return;
+
+		water.material.uniforms.time.value += 1.0 / 60.0;
+		water.render();
 
 		forceField.update();
 		box.update();
