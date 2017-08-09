@@ -129,6 +129,7 @@
 
 <script src="bower_components/tween.js/src/Tween.js"></script>
 <script src="bower_components/three.js/build/three.js"></script>
+<script src="bower_components/three.js/examples/js/Mirror.js"></script>
 <script src="bower_components/three.js/examples/js/controls/TrackballControls.js"></script>
 <script src="bower_components/three.js/examples/js/controls/FirstPersonControls.js"></script>
 <script src="js/data.js"></script>
@@ -160,7 +161,8 @@
 		Black : new THREE.Color(0x110000),
 		BlackHighlight : new THREE.Color(0x636363),
 		Red : new THREE.Color(0xcc390e),
-		White : new THREE.Color(0xffffff)
+		DarkRed : new THREE.Color(0x510400),
+		White : new THREE.Color(0xf9f2f2)
 	};
 
 	var loadedBox = false;
@@ -176,9 +178,9 @@
 			return;
 
 		if (intersects.length > 0){
-			var random = Math.floor(Math.random() * 3);
+			var random = Math.floor(Math.random() * NUM_MODELS);
 			while (random == TARGET_BUFFERS.current)
-				random = Math.floor(Math.random() * 3);
+				random = Math.floor(Math.random() * NUM_MODELS);
 			box.morph(TARGET_BUFFERS.Array[random]);
 			TARGET_BUFFERS.current = random;
 		}
@@ -212,18 +214,18 @@
 
 		scene = new THREE.Scene();
 
-		var ambientLight = new THREE.AmbientLight( 0x3f2806 );
+		var ambientLight = new THREE.AmbientLight( COLORS.BlackHighlight );
 		scene.add( ambientLight );
 
-		var platformLight = new THREE.PointLight( 0xffaa00, 1, 5000 );
+		var platformLight = new THREE.PointLight( COLORS.DarkRed, 1, 5000 );
 		scene.add( platformLight );
 
-		var sunLight = new THREE.SpotLight( 0xffffff, 1.0, 0, Math.PI/2);
+		var sunLight = new THREE.SpotLight( COLORS.Black, 1.0, 0, Math.PI/2);
 		var sunLightHelper = new THREE.SpotLightHelper(sunLight, 10);
 		scene.add(sunLightHelper);
 		sunLight.position.set( 1000, 2000, 1000 );
 		sunLight.castShadow = true;
-		// scene.add(sunLight);
+		scene.add(sunLight);
 
 		//SET UP NODES
 
@@ -245,44 +247,7 @@
 
 		//SET UP MODEL
 
-		var geom;
-		var modelLoader = new THREE.JSONLoader();
-		modelLoader.load(
-			'assets/tetsuo-compressed.json',
-
-			function(geometry, materials){
-				geom = geometry;
-				box = new ParticleObject(geom, 0x486686, .05);
-			    // box.mesh.scale.set(5, 5, 5);
-			    box.mesh.rotation.y = 3.5*Math.PI/2;
-			    boxMeshesArray.push(box.mesh);
-			    scene.add( box.mesh );
-			    loadedBox = true;
-			    GEOMETRIES.Array.push(geometry);
-
-			    //create a float array of targets, once only
-
-			    tetsuoTargets = new Float32Array(MAX_VERTICES*3);
-			    var tetsuoVertices = geometry.vertices;
-			    for (var i=0; i<tetsuoVertices.length; i++){
-					var target = tetsuoVertices[i];
-					var index = i*3;
-
-					tetsuoTargets[index] = target.x;
-					tetsuoTargets[index+1] = target.y;
-					tetsuoTargets[index+2] = target.z;
-				}
-				tetsuoTargetAttributeBuffer = new THREE.BufferAttribute(tetsuoTargets, 3);
-
-				TARGET_BUFFERS.Array.push(tetsuoTargetAttributeBuffer);
-				TARGETS.Array.push(tetsuoTargets);
-
-			    var loading = document.getElementById('loading');
-			    document.body.removeChild(loading);
-			}
-		)
-
-		//SET UP DOME
+		//SET UP PLANE
 
 		var modelHeight = 144; //approximation
 
@@ -295,15 +260,21 @@
 			map: cyberTexture,
 			side: THREE.DoubleSide
 		});
-		plane = new THREE.Mesh(planeGeom, planeMat);
+		// plane = new THREE.Mesh(planeGeom, planeMat);
+		plane = new THREE.Mirror(10000, 10000, {
+			clipBias: 0.003,
+			textureWidth: window.innerWidth * window.devicePixelRatio,
+			textureHeight: window.innerHeight * window.devicePixelRatio,
+			color: 0x777777
+		});
 		plane.position.set(0, -72, 0);
-		plane.rotation.x = Math.PI/2;
+		plane.rotation.x = -Math.PI/2;
 
 		scene.add(plane);
 
 		window.addEventListener('resize', resize);
 		// window.addEventListener('mousemove', onMouseMove);
-		// renderer.domElement.addEventListener('mousedown', onMouseDown);
+		renderer.domElement.addEventListener('mousedown', onMouseDown);
 	}
 
 	function update(){
@@ -316,7 +287,7 @@
 			return;
 
 		forceField.update();
-		// box.update();
+		box.update();
 
 		// var data = analyser.getAverageFrequency();
 		// if (data < 80){

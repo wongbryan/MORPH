@@ -1,56 +1,84 @@
 /* Use max # vertices to avoid having to redefine arrays */
-const MAX_VERTICES = 200000;
-
-var GEOMETRIES = {
-	Array : [],
-	current : 0
-};
-
-var sphereGeom = new THREE.SphereGeometry(2.5, 256, 256);
-var SPHERE_VERTICES = sphereGeom.vertices;
-GEOMETRIES.Array.push(sphereGeom);
-
-var boxGeom = new THREE.BoxGeometry(2.5, 2.5, 2.5, 256, 256);
-var BOX_VERTICES = boxGeom.vertices;
-GEOMETRIES.Array.push(boxGeom);
-
-var TARGETS = {
-	Array: [],
-	current : 0
-};
+const MAX_VERTICES = 1500000;
+const NUM_MODELS = 2;
 
 var TARGET_BUFFERS = {
 	Array: [],
 	current : 0
 };
 
-var sphereTargets = new Float32Array(MAX_VERTICES*3);
-for (var i=0; i<sphereGeom.vertices.length; i++){
-	var target = SPHERE_VERTICES[i];
-	var index = i*3;
+/*LOAD MODELS*/
 
-	sphereTargets[index] = target.x;
-	sphereTargets[index+1] = target.y;
-	sphereTargets[index+2] = target.z;
-}
-var sphereTargetAttributeBuffer = new THREE.BufferAttribute(sphereTargets, 3);
-TARGET_BUFFERS.Array.push(sphereTargetAttributeBuffer);
-TARGETS.Array.push(sphereTargets);
+var initialGeom; 
+
+//Normal Tetsuo
+var tetsuoTarget1;
+var tetsuoTargetAttributeBuffer1;
+
+var modelLoader = new THREE.JSONLoader();
+modelLoader.load(
+	'assets/tetsuo-compressed.json',
+
+	function(geometry, materials){
+		//POPULATE DATA
+	    tetsuoTarget1 = new Float32Array(MAX_VERTICES*3);
+	    var tetsuoVertices = geometry.vertices;
+	    for (var i=0; i<tetsuoVertices.length; i++){
+			var target = tetsuoVertices[i];
+			var index = i*3;
+
+			tetsuoTarget1[index] = target.x;
+			tetsuoTarget1[index+1] = target.y;
+			tetsuoTarget1[index+2] = target.z;
+		}
+		tetsuoTargetAttributeBuffer1 = new THREE.BufferAttribute(tetsuoTarget1, 3);
+
+		TARGET_BUFFERS.Array.push(tetsuoTargetAttributeBuffer1);
+		initialGeom = geometry;
+	}
+)
+
+//Arm Tetsuo
+var testuoTargets2;
+var testuoTargetAttributeBuffer2;
+
+modelLoader.load(
+	'assets/tetsuo-transform.json',
+
+	function(geometry, materials){
+		tetsuoTarget2 = new Float32Array(MAX_VERTICES*3);
+	    var tetsuoVertices2 = geometry.vertices;
+	    for (var i=0; i<tetsuoVertices2.length; i++){
+			var target = tetsuoVertices2[i];
+			var index = i*3;
+
+			tetsuoTarget2[index] = target.x;
+			tetsuoTarget2[index+1] = target.y;
+			tetsuoTarget2[index+2] = target.z;
+		}
+		tetsuoTargetAttributeBuffer2 = new THREE.BufferAttribute(tetsuoTarget2, 3);
+
+		TARGET_BUFFERS.Array.push(tetsuoTargetAttributeBuffer2);
+
+		//INITIALIZE FIRST MESH
+		box = new ParticleObject(initialGeom, 0x486686, .05);
+	    // box.mesh.scale.set(5, 5, 5);
+	    box.mesh.rotation.y = 3.5*Math.PI/2;
+	    boxMeshesArray.push(box.mesh);
+	    scene.add( box.mesh );
+
+	    loadedBox = true;
+
+	    var loading = document.getElementById('loading');
+	    document.body.removeChild(loading);
+	}
+)
+
+/*OTHER CONSTANTS*/
+
+var MORPH_SPEED = .0001;
 
 
-var boxTargets = new Float32Array(MAX_VERTICES*3);
-for (var i=0; i<boxGeom.vertices.length; i++){
-	var target = BOX_VERTICES[i];
-	var index = i*3;
 
-	boxTargets[index] = target.x;
-	boxTargets[index+1] = target.y;
-	boxTargets[index+2] = target.z;
-}
-var boxTargetAttributeBuffer = new THREE.BufferAttribute(boxTargets, 3);
-TARGET_BUFFERS.Array.push(boxTargetAttributeBuffer);
-TARGETS.Array.push(boxTargets);
 
-var tetsuoTargets;
-var tetsuoTargetAttributeBuffer;
 

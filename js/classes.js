@@ -4,7 +4,6 @@ function ParticleObject(geometry, color, size){
   geom.fromGeometry(geometry); //defines the position attribute for us, along with others
 
   var vertexCount = geom.attributes['position'].count;
-  var initialTargetVertexCount = SPHERE_VERTICES.length;
 
   //DEFINE POSITION ATTRIBUTE (Done for us)
 
@@ -23,18 +22,7 @@ function ParticleObject(geometry, color, size){
 
   //DEFINE TARGET POSITION ATTRIBUTE
 
-  var targetVertices = new Float32Array(MAX_VERTICES * 3);
-
-  for (var i=0; i<SPHERE_VERTICES.length; i++){
-    var target = SPHERE_VERTICES[i];
-    var index = i*3; //for every vertex, move forward 3 spots in targetPositions array
-
-    targetVertices[index] = target.x;
-    targetVertices[index+1] = target.y;
-    targetVertices[index+2] = target.z;
-  }
-
-  geom.addAttribute('targetPosition', new THREE.BufferAttribute(targetVertices, 3)); //sphere
+  geom.addAttribute('targetPosition', TARGET_BUFFERS.Array[1]); //transform
   geom.attributes['targetPosition'].dynamic = true;
 
   //DEFINE UNIFORMS AND SHADER MATERIAL
@@ -125,7 +113,9 @@ function ParticleObject(geometry, color, size){
   }
 
   this.update = function(){
-    // this.mesh.material.uniforms['time'].value += .1;
+    if (this.mesh.material.uniforms['amplitude'].value > 1.00 || this.mesh.material.uniforms['amplitude'].value < 0.00)
+      MORPH_SPEED = -MORPH_SPEED;
+    this.mesh.material.uniforms['amplitude'].value += MORPH_SPEED;
     // this.mesh.rotation.y += .0025*this.speed*this.speed*this.speed;
     // this.mesh.rotation.x += .0025*this.speed*this.speed*this.speed;
   }
