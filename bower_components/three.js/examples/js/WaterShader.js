@@ -158,6 +158,18 @@ THREE.Water = function ( renderer, camera, scene, options ) {
 			'	vec2 distortion = surfaceNormal.xz * ( 0.001 + 1.0 / distance ) * distortionScale;',
 			'	vec3 reflectionSample = vec3( texture2D( mirrorSampler, mirrorCoord.xy / mirrorCoord.z ) );',
 
+			/*EXPERIMENTATION*/
+			// '	float pi = 3.141592653;',
+			// '	float radius = 100.;',
+			// '	vec2 center = vec2(mirrorCoord.xy);',
+			// '	float strength = 5.0;',
+			// '	vec2 coord = mirrorCoord.xy;',
+			// '	float drop = max(0.0, 1.0 - length(center * 0.5 + 0.5 - coord) / radius);',
+			// '	drop = 0.5 - cos(drop * pi) * 0.5;',
+			// '	reflectionSample += drop * strength;',
+
+			/*EXPERIMENTATION*/
+
 			'	float theta = max( dot( eyeDirection, surfaceNormal ), 0.0 );',
 			'	float rf0 = 0.5;',
 			'	float reflectance = rf0 + ( 1.0 - rf0 ) * pow( ( 1.0 - theta ), 5.0 );',

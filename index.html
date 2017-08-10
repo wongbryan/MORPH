@@ -283,11 +283,12 @@
 			waterNormals: waterNormals,
 			alpha: 	1.0,
 			sunDirection: sunLight.position.clone().normalize(),
-			sunColor: COLORS.Red,
+			sunColor: COLORS.Black,
 			waterColor: COLORS.Black,
-			distortionScale: 1.,
+			distortionScale: .5,
 			fog: scene.fog != undefined
 		} );
+
 		var waterMesh = new THREE.Mesh(planeGeom, water.material);
 		waterMesh.add(water);
 		waterMesh.rotation.x = -Math.PI/2;
