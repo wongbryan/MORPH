@@ -122,34 +122,22 @@ function ParticleObject(geometry, color, size){
   }
 }
 
-function ForceField(radius, tubeWidth){
+function ForceField(rockGeometry, radius, tubeWidth){
   var torusGeom = new THREE.TorusGeometry(radius, tubeWidth, 64, 64);
   var sphereGeom = new THREE.SphereGeometry(5, 64, 64);
   var geom = new THREE.BufferGeometry();
   geom.fromGeometry(torusGeom);
 
-  var vertexCount = geom.attributes.position.count;
-  var thetas = new Float32Array(vertexCount);
-  var phis = new Float32Array(vertexCount);
-  var cycle = 64*64; //number of vertices in a single sin wave
-  for (var i=0; i<vertexCount; i++){
-    thetas[i] = i*(2 * Math.PI / cycle); //0->2PI
-    phis[i] = i*(Math.PI / cycle)//0->PI
-  }
-
-  geom.addAttribute('theta', new THREE.BufferAttribute(thetas, 1));
-  geom.addAttribute('phi', new THREE.BufferAttribute(thetas, 1));
-
   var texture = new THREE.TextureLoader().load('assets/rgb texture.png');
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   var mat = new THREE.ShaderMaterial({
-    wireframe: true,
+    // wireframe: true,
     transparent: true,
     uniforms : {
       time : { type : 'f', value : 0.0 },
       opacity : { type : 'f', value : .2},
-      amplitude : { type : 'f', value : 20.},
-      speed : { type : 'f', value : 25. },
+      amplitude : { type : 'f', value : 5.},
+      speed : { type : 'f', value : 1000. },
       pointSize : { type : 'f', value : 2.0},
       color : { type : 'v3', value : new THREE.Color(0xffffff)}
     },
@@ -158,21 +146,35 @@ function ForceField(radius, tubeWidth){
   });
 
   var cubeGeom = new THREE.BoxGeometry(1, 1, 1);
-  var cubeMat = new THREE.MeshPhongMaterial({
+  var rockMat = new THREE.MeshPhongMaterial({
     color : 0xffffff,
+    specular : COLORS.DarkRed,
     transparent: true,
     opacity: .95
   });
-  var s = 7;
-  var cube = new THREE.Mesh(cubeGeom, cubeMat);
+  var s = 4;
+  var cube = new THREE.Mesh(cubeGeom, rockMat);
   cube.scale.set(s, s, s);
+
+  var rock = new THREE.Mesh(rockGeometry, rockMat);
+  rock.scale.set(s, s, s);
 
   var mesh = new THREE.Mesh(geom, mat);
 
-  // this.mesh = mesh;
-  this.mesh = cube;
+  var group = new THREE.Group();
+  group.add(mesh);
+  group.add(rock);
+
+  this.mesh = group;
+  this.mesh.nodeObject = this;
+  // this.mesh = rock;
+
+  this.animate = function(){
+    console.log('click');
+  }
+  
   this.update = function(){
-    // this.mesh.material.uniforms.time.value += .0005;
+    this.mesh.children[0].material.uniforms.time.value += .0005;
   }
 }
 

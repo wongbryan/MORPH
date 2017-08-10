@@ -81,6 +81,14 @@ modelLoader.load(
 
 var MORPH_SPEED = .0001;
 
+const COLORS = {
+	Black : new THREE.Color(0x110000),
+	BlackHighlight : new THREE.Color(0x636363),
+	Red : new THREE.Color(0xcc390e),
+	DarkRed : new THREE.Color(0x510400),
+	White : new THREE.Color(0xf9f2f2)
+};
+
 
 
 
