@@ -7,6 +7,7 @@ function ParticleObject(geometry, color, size){
 
   //DEFINE POSITION ATTRIBUTE (Done for us)
 
+  // geom.addAttribute('position', tetsuoTargetAttributeBuffer1);
   geom.attributes['position'].dynamic = true;
 
   //DEFINE ANGLE ATTRIBUTE

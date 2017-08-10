@@ -1,5 +1,5 @@
 /* Use max # vertices to avoid having to redefine arrays */
-const MAX_VERTICES = 1500000;
+const MAX_VERTICES = 173130;
 const NUM_MODELS = 2;
 
 var TARGET_BUFFERS = {
@@ -71,8 +71,11 @@ modelLoader.load(
 
 	    var loading = document.getElementById('loading');
 	    document.body.removeChild(loading);
+
 	}
 )
+
+
 
 /*OTHER CONSTANTS*/
 
