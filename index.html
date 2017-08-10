@@ -263,8 +263,8 @@
 			side: THREE.DoubleSide
 		});
 		// plane = new THREE.Mesh(planeGeom, planeMat);
-		plane = new THREE.Mirror(10000, 10000, {
-			clipBias: 0.003,
+		plane = new THREE.Mirror(1000, 1000, {
+			clipBias: 0.03,
 			textureWidth: window.innerWidth * window.devicePixelRatio,
 			textureHeight: window.innerHeight * window.devicePixelRatio,
 			color: 0x777777
@@ -278,14 +278,14 @@
 		waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
 
 		water = new THREE.Water( renderer, camera, scene, {
-			textureWidth: 512,
-			textureHeight: 512,
+			textureWidth: window.innerWidth * window.devicePixelRatio,
+			textureHeight: window.innerHeight * window.devicePixelRatio,
 			waterNormals: waterNormals,
 			alpha: 	1.0,
 			sunDirection: sunLight.position.clone().normalize(),
-			sunColor: 0xffffff,
-			waterColor: COLORS.White,
-			distortionScale: 0.,
+			sunColor: COLORS.Red,
+			waterColor: COLORS.Black,
+			distortionScale: 1.,
 			fog: scene.fog != undefined
 		} );
 		var waterMesh = new THREE.Mesh(planeGeom, water.material);

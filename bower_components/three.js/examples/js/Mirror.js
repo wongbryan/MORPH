@@ -4,7 +4,17 @@
 
 THREE.Mirror = function ( width, height, options ) {
 
-	THREE.Mesh.call( this, new THREE.PlaneBufferGeometry( width, height ) );
+	var planeGeom = new THREE.PlaneGeometry(width, height);
+	var geom = new THREE.BufferGeometry();
+	geom.fromGeometry(planeGeom);
+
+	var numVertices = geom.attributes.position.count;
+	var angles = new Float32Array()
+	for (var i=0; i<numVertices; i++){
+
+	}
+
+	THREE.Mesh.call( this, geom );
 
 	var scope = this;
 
@@ -50,20 +60,26 @@ THREE.Mirror = function ( width, height, options ) {
 
 	}
 
+	var noiseTexture = new THREE.TextureLoader().load('assets/rgb texture.png');
 	var mirrorShader = {
 
 		uniforms: {
 			mirrorColor: { value: new THREE.Color( 0x7F7F7F ) },
 			mirrorSampler: { value: null },
-			textureMatrix: { value: new THREE.Matrix4() }
+			textureMatrix: { value: new THREE.Matrix4() },
+			noiseTexture: { value: noiseTexture},
+			speed: { value: 10. },
+			time: { value: 0.0 }
 		},
 
 		vertexShader: [
+
 			'uniform mat4 textureMatrix;',
 			'varying vec4 mirrorCoord;',
+			'varying vec2 vUv;',
 
 			'void main() {',
-
+			'	vUv = uv;',
 			'	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );',
 			'	vec4 worldPosition = modelMatrix * vec4( position, 1.0 );',
 			'	mirrorCoord = textureMatrix * worldPosition;',
@@ -77,6 +93,7 @@ THREE.Mirror = function ( width, height, options ) {
 			'uniform vec3 mirrorColor;',
 			'uniform sampler2D mirrorSampler;',
 			'varying vec4 mirrorCoord;',
+			'varying vec2 vUv;',
 
 			'float blendOverlay(float base, float blend) {',
 			'	return( base < 0.5 ? ( 2.0 * base * blend ) : (1.0 - 2.0 * ( 1.0 - base ) * ( 1.0 - blend ) ) );',
