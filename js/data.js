@@ -1,5 +1,7 @@
 /* Use max # vertices to avoid having to redefine arrays */
 const MAX_VERTICES = 173130;
+// const MAX_VERTICES = 140523;
+
 const NUM_MODELS = 2;
 
 var TARGET_BUFFERS = {
@@ -23,10 +25,10 @@ modelLoader.load(
 		//POPULATE DATA
 	    tetsuoTarget1 = new Float32Array(MAX_VERTICES*3);
 	    var tetsuoVertices = geometry.vertices;
-	    for (var i=0; i<tetsuoVertices.length; i++){
-			var target = tetsuoVertices[i];
-			var index = i*3;
-
+	    var i, j=0;
+	    for (i=0; i<tetsuoVertices.length; i++){
+	    	var index = i*3;
+    		var target = tetsuoVertices[i];
 			tetsuoTarget1[index] = target.x;
 			tetsuoTarget1[index+1] = target.y;
 			tetsuoTarget1[index+2] = target.z;
@@ -48,11 +50,17 @@ modelLoader.load(
 	function(geometry, materials){
 		tetsuoTarget2 = new Float32Array(MAX_VERTICES*3);
 	    var tetsuoVertices2 = geometry.vertices;
-	    for (var i=0; i<tetsuoVertices2.length; i++){
-			var target = tetsuoVertices2[i];
-			var index = i*3;
-
-			tetsuoTarget2[index] = target.x;
+	    var i, j=0; //j is the flag
+	    for (i=0; i<MAX_VERTICES; i++){
+	    	var index = i*3;
+	    	if(i>=tetsuoVertices2.length){ //point at which we would just have 0s
+	    		var target = tetsuoVertices2[j];;
+				j++;
+	    	}
+	    	else{
+				var target = tetsuoVertices2[i];
+	    	}
+	    	tetsuoTarget2[index] = target.x;
 			tetsuoTarget2[index+1] = target.y;
 			tetsuoTarget2[index+2] = target.z;
 		}
@@ -79,7 +87,7 @@ modelLoader.load(
 
 /*OTHER CONSTANTS*/
 
-var MORPH_SPEED = .0001;
+var MORPH_SPEED = .0005;
 
 const COLORS = {
 	Black : new THREE.Color(0x110000),

@@ -7,7 +7,6 @@ function ParticleObject(geometry, color, size){
 
   //DEFINE POSITION ATTRIBUTE (Done for us)
 
-  // geom.addAttribute('position', tetsuoTargetAttributeBuffer1);
   geom.attributes['position'].dynamic = true;
 
   //DEFINE ANGLE ATTRIBUTE
@@ -167,14 +166,27 @@ function ForceField(rockGeometry, radius, tubeWidth){
 
   this.mesh = group;
   this.mesh.nodeObject = this;
-  // this.mesh = rock;
+  this.angle = Math.random() * 2 * Math.PI;
+  this.hoverSpeed = 10 + Math.random() * 10;
+  this.amp = .1 + Math.random() * .1;
+
+  this.horAmp = this.amp;
+  this.horSpeed = this.hoverSpeed*20;
+  this.horAngle = this.angle;
 
   this.animate = function(){
     console.log('click');
   }
-  
+
   this.update = function(){
     this.mesh.children[0].material.uniforms.time.value += .0005;
+
+    this.angle += this.hoverSpeed*.005;
+    this.mesh.position.y += this.amp*Math.sin(this.angle);
+
+    this.horAngle += this.horSpeed*.005;
+    this.horAmp = this.amp*(Math.sin(this.angle)+1)/2;
+    this.mesh.position.x += this.horAmp*Math.cos(this.horAngle);
   }
 }
 
