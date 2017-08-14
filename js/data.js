@@ -25,11 +25,20 @@ modelLoader.load(
 		//POPULATE DATA
 	    tetsuoTarget1 = new Float32Array(MAX_VERTICES*3);
 	    var tetsuoVertices = geometry.vertices;
-	    var i, j=0;
-	    for (i=0; i<tetsuoVertices.length; i++){
+	    var i, j=0; //j is the flag
+	    for (i=0; i<MAX_VERTICES; i++){
 	    	var index = i*3;
-    		var target = tetsuoVertices[i];
-			tetsuoTarget1[index] = target.x;
+	    	if(i>=tetsuoVertices.length){ //point at which we would just have 0s
+	    		if (j >= tetsuoVertices.length) //loop through geometry as many times as needed
+	    			j=0;
+	    		var target = tetsuoVertices[j];;
+				j++;
+	    	}
+	    	else{
+				var target = tetsuoVertices[i];
+	    	}
+
+	    	tetsuoTarget1[index] = target.x;
 			tetsuoTarget1[index+1] = target.y;
 			tetsuoTarget1[index+2] = target.z;
 		}
@@ -53,7 +62,9 @@ modelLoader.load(
 	    var i, j=0; //j is the flag
 	    for (i=0; i<MAX_VERTICES; i++){
 	    	var index = i*3;
-	    	if(i>=tetsuoVertices2.length){ //point at which we would just have 0s
+	    	if(i>=tetsuoVertices2.length){
+	    		if (j >= tetsuoVertices2.length)
+	    			j=0;
 	    		var target = tetsuoVertices2[j];;
 				j++;
 	    	}
@@ -87,7 +98,7 @@ modelLoader.load(
 
 /*OTHER CONSTANTS*/
 
-var MORPH_SPEED = .0005;
+var MORPH_SPEED = .00005;
 
 const COLORS = {
 	Black : new THREE.Color(0x110000),

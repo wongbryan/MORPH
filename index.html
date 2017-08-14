@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" type="text/css" href="assets/Fonts/Rajdhani/stylesheet.css"/>
+<link rel="stylesheet" type="text/css" href="assets/Fonts/Didot/stylesheet.css"/>
+<link rel="stylesheet" type="text/css" href="assets/Fonts/Tungsten/stylesheet.css"/>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
 <head>
 	<title>Rain</title>
 </head>
@@ -29,34 +33,29 @@
 		font-weight: lighter;
 		text-align: center;
 	}
-
-	a{
-		font-family: Helvetica;
-		font-size: 1em;
-		position: fixed;
-		margin: 25px;
-	}
-
-	a:first-child{
-		left: 0;
-		bottom: 0;
-	}
-
-	a:nth-child(2){
-		right: 0;
-		bottom: 0;
-		transition: all .25s;
-	}
-
-	a:nth-child(2):hover{
-		cursor: pointer;
-		color: #486686;
-	}
 </style>
 <body>
-	<div id="loading"><h1>LOADING</h1></div>
-	<a>click to object morph, arrow keys to move</a>
-	<a onclick="sound.play()">play</a>
+	<div id="loading">
+		<img class="kanji" src="assets/kanji-test.png"/>
+	</div>
+	<div id="ui">
+		<div class="wrapper">
+			<img class="background-kanji" src="assets/kanji-placeholder-01.png"/>
+			<h1 class="title">AKIRA, PRIDE, FURY</h1>
+			<div class="subhead">
+				<div class="line"></div>
+				<h1>ICARUS</h1>
+				<div class="line"></div>
+			</div>
+			<p>
+				Beating his wings harder and harder, Icarus soared up into the sky and out over the Aegean Sea. It was hard to believe it but the plan had worked...
+			</p>
+		<!-- 	<div class="clips">
+				<img src="assets/placeholder-01.jpg"/>
+				<img src="assets/placeholder-02.jpg"/>
+			</div> -->
+		</div>
+	</div>
 	<div id="container"></div>
 </body>
 
@@ -72,7 +71,7 @@
 	void main(){
 		pos = position;
 
-		gl_PointSize = .7;
+		gl_PointSize = .75;
 
 		vec3 direction = magnitude*vec3(cos(time+angle), sin(time+angle), cos(time+angle));
 
@@ -304,7 +303,7 @@
 		plane.position.set(0, -72, 0);
 		plane.rotation.x = -Math.PI/2;
 
-		// scene.add(plane);
+		scene.add(plane);
 
 		var waterNormals = new THREE.TextureLoader().load('assets/waternormals.jpg');
 		waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
@@ -317,7 +316,7 @@
 			sunDirection: sunLight.position.clone().normalize(),
 			sunColor: COLORS.Black,
 			waterColor: COLORS.Black,
-			distortionScale: .5,
+			distortionScale: .0,
 			fog: scene.fog != undefined
 		} );
 
@@ -326,7 +325,7 @@
 		waterMesh.rotation.x = -Math.PI/2;
 		waterMesh.position.set(0, -72, 0);
 
-		scene.add(waterMesh);
+		// scene.add(waterMesh);
 
 		window.addEventListener('resize', resize);
 		// window.addEventListener('mousemove', onMouseMove);
@@ -335,12 +334,12 @@
 
 	function update(){
 		// controls.update();
-		// camera.lookAt(new THREE.Vector3(0, 0, 0));
+		camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 		if (!loadedBox)
 			return;
 
-		water.material.uniforms.time.value += 1.0 / 60.0;
+		water.material.uniforms.time.value += .025;
 
 		for(var i=0; i<nodes.length; i++){
 			nodes[i].update();

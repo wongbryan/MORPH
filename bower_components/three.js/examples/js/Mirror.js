@@ -5,6 +5,7 @@
 THREE.Mirror = function ( width, height, options ) {
 
 	var planeGeom = new THREE.PlaneGeometry(width, height);
+	// var planeGeom = new THREE.SphereGeometry(50, 64, 64);
 	var geom = new THREE.BufferGeometry();
 	geom.fromGeometry(planeGeom);
 

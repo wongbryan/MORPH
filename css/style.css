@@ -1,0 +1,81 @@
+#ui {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.8); }
+
+.cover {
+  height: 100vh;
+  width: 100vw;
+  background-color: black;
+  opacity: .7;
+  position: absolute; }
+
+.kanji {
+  position: absolute;
+  left: 50%;
+  height: 50vh;
+  z-index: -1;
+  transform: translate(-50%, -25%); }
+
+.wrapper {
+  z-index: 2000;
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 45%; }
+  .wrapper .background-kanji {
+    z-index: -1;
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    height: 150%;
+    opacity: .5; }
+  .wrapper .title {
+    font-family: "didotmedium";
+    font-size: 5em;
+    color: white;
+    z-index: 2001;
+    margin: 0;
+    margin-bottom: 4%;
+    text-align: center;
+    white-space: nowrap; }
+  .wrapper .subhead {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6%; }
+    .wrapper .subhead .line {
+      background-color: white;
+      height: 1px;
+      width: 100px; }
+    .wrapper .subhead h1 {
+      font-family: "Tungsten";
+      font-size: 2em;
+      font-weight: 500;
+      color: white;
+      margin: 0;
+      margin-left: 15px;
+      margin-right: 15px; }
+  .wrapper .clips {
+    display: flex;
+    align-items: center;
+    justify-content: space-around; }
+    .wrapper .clips img {
+      margin: 0;
+      margin-right: 5px;
+      width: 49%; }
+  .wrapper p {
+    text-align: center;
+    font-family: "Rajdhani";
+    font-weight: lighter;
+    color: white;
+    font-size: 20px;
+    line-height: 20px;
+    margin: auto;
+    margin-bottom: 6%;
+    max-width: 75%; }
+
+/*# sourceMappingURL=style.css.map */

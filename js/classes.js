@@ -31,7 +31,7 @@ function ParticleObject(geometry, color, size){
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   var uniforms = {
     time : { type : 'f', value : 0.0 },
-    amplitude : { type : 'f', value : 0.0 }, //how far along the morph it is
+    amplitude : { type : 'f', value : 0.05 }, //how far along the morph it is
     color : { type : 'v3', value : COLORS.Red},
     magnitude : { type : 'f', value : 1.},
     opacity : { type : 'f', value : 1.}
@@ -167,7 +167,7 @@ function ForceField(rockGeometry, radius, tubeWidth){
   this.mesh = group;
   this.mesh.nodeObject = this;
   this.angle = Math.random() * 2 * Math.PI;
-  this.hoverSpeed = 10 + Math.random() * 10;
+  this.hoverSpeed = 1.5 + Math.random() * 2.5;
   this.amp = .1 + Math.random() * .1;
 
   this.horAmp = this.amp;
