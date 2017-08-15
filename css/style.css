@@ -36,11 +36,26 @@
   position: absolute; }
 
 .kanji {
-  position: absolute;
   left: 50%;
-  height: 50vh;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  height: 65vh;
   z-index: -1;
-  transform: translate(-50%, -25%); }
+  transform: translate(-50%, -50%); }
+
+.main {
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-family: "didotlhbold";
+  font-size: 7em;
+  color: white;
+  z-index: 2001;
+  margin: 0;
+  text-align: center;
+  white-space: nowrap; }
 
 .wrapper {
   z-index: 2000;
@@ -97,7 +112,7 @@
     font-weight: lighter;
     color: white;
     font-size: 20px;
-    line-height: 20px;
+    line-height: 23px;
     margin: auto;
     margin-bottom: 5%;
     max-width: 75%; }

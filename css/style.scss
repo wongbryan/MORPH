@@ -46,11 +46,21 @@ $Rajdhani : 'Rajdhani';
 }
 
 .kanji{
-	position: absolute;
-	left: 50%;
-	height: 50vh;
+	@include absolute-center;
+	height: 65vh;
 	z-index: -1;
-	transform: translate(-50%, -25%);
+	transform: translate(-50%, -50%);
+}
+
+.main{
+	@include absolute-center;
+	font-family: $Didot-bold;
+	font-size: 7em;
+	color: white;
+	z-index: 2001;
+	margin: 0;
+	text-align: center;
+	white-space: nowrap;
 }
 
 .wrapper{
@@ -109,7 +119,7 @@ $Rajdhani : 'Rajdhani';
 		font-weight: lighter;
 		color: white;
 		font-size: 20px;
-		line-height: 20px;
+		line-height: 23px;
 		margin: auto;
 		margin-bottom: 5%;
 		max-width: 75%;
