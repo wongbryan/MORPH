@@ -38,7 +38,7 @@
 	<div id="loading">
 		<img class="kanji" src="assets/kanji-test.png"/>
 	</div>
-	<div id="ui">
+	<div id="ui" class="hidden">
 		<div class="wrapper">
 			<img class="background-kanji" src="assets/kanji-placeholder-01.png"/>
 			<h1 class="title">AKIRA, PRIDE, FURY</h1>
@@ -127,12 +127,14 @@
 </script>
 
 <script src="bower_components/tween.js/src/Tween.js"></script>
+<script src="bower_components/ScrambleText-master/dist/ScrambleText.js"></script>
 <script src="bower_components/three.js/build/three.js"></script>
 <script src="bower_components/three.js/examples/js/Mirror.js"></script>
 <script src="bower_components/three.js/examples/js/WaterShader.js"></script>
 <script src="bower_components/three.js/examples/js/controls/TrackballControls.js"></script>
 <script src="bower_components/three.js/examples/js/controls/FirstPersonControls.js"></script>
 <script src="bower_components/three.js/examples/js/controls/OrbitControls.js"></script>
+<script src="js/ui.js"></script>
 <script src="js/data.js"></script>
 <script src="js/classes.js"></script>
 <script>
@@ -176,6 +178,9 @@
 			var target = point.multiplyScalar(2.);
 			var tween = new TWEEN.Tween(camera.position).to(target, 1500);
 			tween.easing(TWEEN.Easing.Quintic.InOut);
+			tween.onComplete(function(){
+				toggleUI(1);
+			});
 			tween.start();
 			rock.nodeObject.animate();
 		}
