@@ -12,7 +12,11 @@
 	<div id="loading">
 		<div class="main">
 			<h1>TETSUO SHIMA</h1>
-			<h2>JOURNEY OF ICARUS</h2>
+			<div style="width: 40%;" class="subhead">
+				<div class="line"></div>
+				<h2>A FISH OUT OF WATER</h2>
+				<div class="line"></div>
+			</div>
 		</div>
 		<img class="kanji" src="assets/kanji-test.png"/>
 	</div>
@@ -160,6 +164,9 @@
 				toggleUI(1);
 			});
 			tween.start();
+
+			// var tween2 = new TWEEN.Tween(cameraTarget).to(point, 1500);
+			// tween2.start();
 			rock.nodeObject.animate();
 		}
 	}
@@ -317,7 +324,7 @@
 
 	function update(){
 		// controls.update();
-		camera.lookAt(new THREE.Vector3(0, 0, 0));
+		camera.lookAt(cameraTarget);
 
 		if (!loadedBox)
 			return;
