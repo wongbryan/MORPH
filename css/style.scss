@@ -1,5 +1,5 @@
-$Didot-bold : 'didotlhbold';
-$Didot-med : 'didotmedium';
+$Didot-bold : 'Didot-Bold';
+$Didot-med : 'Didot';
 $Tungsten : 'Tungsten';
 $Rajdhani : 'Rajdhani';
 
@@ -8,6 +8,19 @@ $Rajdhani : 'Rajdhani';
 	top: 50%;
 	position: absolute;
 	transform: translate(-50%, -50%);
+}
+
+body{
+	margin: 0;
+	overflow: hidden;
+}
+
+#loading{
+	background-color: black;
+	height: 100vh;
+	width: 100vw;
+	position: fixed;
+	z-index: 2000;
 }
 
 #ui{
@@ -23,7 +36,7 @@ $Rajdhani : 'Rajdhani';
 }
 
 @keyframes hide{
-	0%{ opacity: .8; visibility: visible;}
+	0%{ opacity: .9; visibility: visible;}
 	99%{ opacity: 0; visibility: visible;}
 	100%{ opacity: 0; visibility: hidden;}
 }
@@ -34,7 +47,7 @@ $Rajdhani : 'Rajdhani';
 
 @keyframes show{
 	0%{ opacity: 0; visibility: hidden;}
-	100%{ opacity: .8; visibility: visible;}
+	100%{ opacity: .9; visibility: visible;}
 }
 
 .cover{
@@ -47,20 +60,37 @@ $Rajdhani : 'Rajdhani';
 
 .kanji{
 	@include absolute-center;
-	height: 65vh;
+	height: 80vh;
 	z-index: -1;
 	transform: translate(-50%, -50%);
+	opacity: .4;
+	animation: glow 3s infinite alternate ease-in-out;
+}
+
+@keyframes glow{
+	0%{opacity: .4;}
+	100%{opacity: .9;}
 }
 
 .main{
 	@include absolute-center;
-	font-family: $Didot-bold;
-	font-size: 7em;
-	color: white;
 	z-index: 2001;
 	margin: 0;
 	text-align: center;
 	white-space: nowrap;
+	h1{
+		font-family: $Didot-bold;
+		font-size: 5.5em;
+		color: white;
+		margin: 0;
+	}
+	h2{
+		font-family: $Tungsten;
+		font-size: 2em;
+		color: white;
+		margin: 0;
+		font-weight: 500;
+	}
 }
 
 .wrapper{
@@ -71,11 +101,11 @@ $Rajdhani : 'Rajdhani';
 		z-index: -1;
 		@include absolute-center;
 		height: 150%;
-		opacity: .5;
+		opacity: .6;
 	}
 	.title{
 		font-family: $Didot-med;
-		font-size: 5em;
+		font-size: 4.5em;
 		color: white;
 		z-index: 2001;
 		margin: 0;
@@ -87,8 +117,11 @@ $Rajdhani : 'Rajdhani';
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		width: 30%;
+		margin: auto;
 		margin-bottom: 5%;
 		.line{
+			flex-grow: 1;
 			background-color: white;
 			height: 1px;
 			width: 100px;

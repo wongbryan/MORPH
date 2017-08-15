@@ -1,3 +1,14 @@
+body {
+  margin: 0;
+  overflow: hidden; }
+
+#loading {
+  background-color: black;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  z-index: 2000; }
+
 #ui {
   position: absolute;
   height: 100vh;
@@ -10,7 +21,7 @@
 
 @keyframes hide {
   0% {
-    opacity: .8;
+    opacity: .9;
     visibility: visible; }
   99% {
     opacity: 0;
@@ -26,7 +37,7 @@
     opacity: 0;
     visibility: hidden; }
   100% {
-    opacity: .8;
+    opacity: .9;
     visibility: visible; } }
 .cover {
   height: 100vh;
@@ -40,22 +51,37 @@
   top: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
-  height: 65vh;
+  height: 80vh;
   z-index: -1;
-  transform: translate(-50%, -50%); }
+  transform: translate(-50%, -50%);
+  opacity: .4;
+  animation: glow 3s infinite alternate ease-in-out; }
 
+@keyframes glow {
+  0% {
+    opacity: .4; }
+  100% {
+    opacity: .9; } }
 .main {
   left: 50%;
   top: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
-  font-family: "didotlhbold";
-  font-size: 7em;
-  color: white;
   z-index: 2001;
   margin: 0;
   text-align: center;
   white-space: nowrap; }
+  .main h1 {
+    font-family: "Didot-Bold";
+    font-size: 5.5em;
+    color: white;
+    margin: 0; }
+  .main h2 {
+    font-family: "Tungsten";
+    font-size: 2em;
+    color: white;
+    margin: 0;
+    font-weight: 500; }
 
 .wrapper {
   z-index: 2000;
@@ -71,10 +97,10 @@
     position: absolute;
     transform: translate(-50%, -50%);
     height: 150%;
-    opacity: .5; }
+    opacity: .6; }
   .wrapper .title {
-    font-family: "didotmedium";
-    font-size: 5em;
+    font-family: "Didot";
+    font-size: 4.5em;
     color: white;
     z-index: 2001;
     margin: 0;
@@ -85,8 +111,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 30%;
+    margin: auto;
     margin-bottom: 5%; }
     .wrapper .subhead .line {
+      flex-grow: 1;
       background-color: white;
       height: 1px;
       width: 100px; }

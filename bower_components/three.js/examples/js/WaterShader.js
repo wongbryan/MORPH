@@ -176,7 +176,8 @@ THREE.Water = function ( renderer, camera, scene, options ) {
 			'	vec3 scatter = max( 0.0, dot( surfaceNormal, eyeDirection ) ) * waterColor;',
 			'	vec3 albedo = mix( sunColor * diffuseLight * 0.3 + scatter, ( vec3( 0.1 ) + reflectionSample * 0.9 + reflectionSample * specularLight ), reflectance );',
 			'	vec3 outgoingLight = albedo;',
-			'	gl_FragColor = vec4( outgoingLight, alpha );',
+			// '	gl_FragColor = vec4( outgoingLight, alpha );',
+			'	gl_FragColor = vec4(reflectionSample, 1.);',
 
 			THREE.ShaderChunk[ 'fog_fragment' ],
 

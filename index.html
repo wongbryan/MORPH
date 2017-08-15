@@ -1,42 +1,19 @@
 <!DOCTYPE html>
 <html>
 <link rel="stylesheet" type="text/css" href="assets/Fonts/Rajdhani/stylesheet.css"/>
-<link rel="stylesheet" type="text/css" href="assets/Fonts/Didot/stylesheet.css"/>
+<link rel="stylesheet" type="text/css" href="assets/Fonts/Didot/styles.css"/>
 <link rel="stylesheet" type="text/css" href="assets/Fonts/Tungsten/stylesheet.css"/>
 <link rel="stylesheet" type="text/css" href="css/style.css"/>
 <head>
 	<title>Rain</title>
 </head>
 
-<style>
-	body{
-		margin: 0;
-		overflow: hidden;
-	}
-
-	#loading{
-		background-color: black;
-		height: 100vh;
-		width: 100vw;
-		position: fixed;
-		z-index: 2000;
-	}
-
-	#loading h1 {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		color: white;
-		font-family: sans-serif;
-		font-size: 1em;
-		font-weight: lighter;
-		text-align: center;
-	}
-</style>
 <body>
 	<div id="loading">
-		<div class="main">TETSUO SHIMA</div>
+		<div class="main">
+			<h1>TETSUO SHIMA</h1>
+			<h2>JOURNEY OF ICARUS</h2>
+		</div>
 		<img class="kanji" src="assets/kanji-test.png"/>
 	</div>
 	<div id="ui" class="hidden">
@@ -128,13 +105,13 @@
 </script>
 
 <script src="bower_components/tween.js/src/Tween.js"></script>
-<script src="bower_components/ScrambleText-master/dist/ScrambleText.js"></script>
 <script src="bower_components/three.js/build/three.js"></script>
 <script src="bower_components/three.js/examples/js/Mirror.js"></script>
 <script src="bower_components/three.js/examples/js/WaterShader.js"></script>
 <script src="bower_components/three.js/examples/js/controls/TrackballControls.js"></script>
 <script src="bower_components/three.js/examples/js/controls/FirstPersonControls.js"></script>
 <script src="bower_components/three.js/examples/js/controls/OrbitControls.js"></script>
+<script src="js/ScrambleText.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/data.js"></script>
 <script src="js/classes.js"></script>
@@ -309,7 +286,7 @@
 		plane.position.set(0, -72, 0);
 		plane.rotation.x = -Math.PI/2;
 
-		scene.add(plane);
+		// scene.add(plane);
 
 		var waterNormals = new THREE.TextureLoader().load('assets/waternormals.jpg');
 		waterNormals.wrapS = waterNormals.wrapT = THREE.RepeatWrapping;
@@ -331,7 +308,7 @@
 		waterMesh.rotation.x = -Math.PI/2;
 		waterMesh.position.set(0, -72, 0);
 
-		// scene.add(waterMesh);
+		scene.add(waterMesh);
 
 		window.addEventListener('resize', resize);
 		// window.addEventListener('mousemove', onMouseMove);
