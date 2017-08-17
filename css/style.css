@@ -2,11 +2,11 @@ body {
   margin: 0;
   overflow: hidden; }
 
-#loading {
+#storyContainer {
   background-color: black;
   height: 100vh;
   width: 100vw;
-  position: fixed;
+  position: absolute;
   z-index: 2000; }
 
 #ui {
@@ -17,17 +17,28 @@ body {
   opacity: .8; }
 
 .hidden {
+  opacity: 0;
+  visibility: hidden; }
+
+.showing {
+  opacity: 1;
+  visibility: visible; }
+
+.hide {
   animation: hide 1s forwards; }
 
 @keyframes hide {
   0% {
     opacity: .9;
+    display: block;
     visibility: visible; }
   99% {
     opacity: 0;
+    display: block;
     visibility: visible; }
   100% {
     opacity: 0;
+    display: none;
     visibility: hidden; } }
 .show {
   animation: show 1s forwards; }
@@ -72,10 +83,11 @@ body {
   text-align: center;
   white-space: nowrap; }
   .main h1 {
-    font-family: "Didot-Bold";
-    font-size: 5.5em;
+    font-family: Didot;
+    font-size: 6em;
     color: white;
-    margin: 0; }
+    margin: 0;
+    margin-bottom: 10px; }
   .main h2 {
     font-family: "Tungsten";
     font-size: 2em;
@@ -120,7 +132,8 @@ body {
     height: 150%;
     opacity: .6; }
   .wrapper .title {
-    font-family: "Didot";
+    font-family: "Unna";
+    font-weight: bold;
     font-size: 4.5em;
     color: white;
     z-index: 2001;
@@ -146,16 +159,55 @@ body {
     margin: auto;
     margin-bottom: 5%;
     max-width: 75%; }
-  .wrapper .close {
-    font-family: "Rajdhani";
-    margin: auto;
+  .wrapper .UIcloseButton {
+    text-align: center; }
+    .wrapper .UIcloseButton a {
+      font-family: "Rajdhani";
+      margin: auto;
+      font-size: 1.5em;
+      transition: all .4s ease;
+      color: white; }
+    .wrapper .UIcloseButton a:hover {
+      color: red;
+      cursor: pointer; }
+
+#loadingBar {
+  width: 100%;
+  height: 1.5px;
+  background-color: white;
+  margin: auto; }
+
+.plotPoint {
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  visibility: hidden;
+  text-align: center; }
+  .plotPoint h1, .plotPoint h2 {
+    margin: 0; }
+  .plotPoint h1 {
+    font-family: "Tungsten";
+    font-size: 6em;
+    color: white; }
+  .plotPoint h2 {
+    font-family: Didot;
+    font-weight: normal;
     font-size: 1.5em;
-    transition: all .4s ease;
-    color: white;
+    color: lightgray;
+    margin-bottom: 10px; }
+  .plotPoint .continue {
     text-align: center;
-    display: block; }
-  .wrapper .close:hover {
-    color: red;
-    cursor: pointer; }
+    margin: auto; }
+    .plotPoint .continue a {
+      font-family: Didot;
+      font-weight: lighter;
+      font-size: 2.5em;
+      color: lightgray;
+      transition: all .4s; }
+    .plotPoint .continue a:hover {
+      color: red;
+      cursor: pointer; }
 
 /*# sourceMappingURL=style.css.map */

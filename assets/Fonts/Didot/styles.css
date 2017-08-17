@@ -1,4 +1,4 @@
-
+{ text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 @font-face {
   font-family: 'Didot-Bold';
   src: url('Didot-Bold.eot') format('embedded-opentype');
@@ -9,6 +9,13 @@
 @font-face {
   font-family: 'Didot';
   src: url('Didot.eot') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Didot-Italic';
+  src: url('Didot-Italic.eot') format('embedded-opentype');
   font-weight: normal;
   font-style: normal;
 }

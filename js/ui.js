@@ -2,7 +2,12 @@
 var main = document.getElementsByClassName('main')[0];
 var sub = main.getElementsByTagName('h2')[0];
 
+/*PLOT POINTS*/
+var storyContainer = document.getElementById('storyContainer');
+var plotPoints = document.getElementsByClassName('plotPoint');
+
 /*INFO SCREEN*/
+var UI = document.getElementById('ui');
 var fx;
 
 const phrases = [
@@ -20,18 +25,16 @@ const next = () => {
   counter = (counter + 1) % phrases.length
 }
 
-var UI = document.getElementById('ui');
-
-function toggleUI(on){
+function toggleVisibility(element, on){
 	if(on){
-		UI.classList.remove('hidden');
-		UI.classList.add('show');
+		element.classList.remove('hide');
+		element.classList.add('show');
 		// var scrambleText = document.getElementById('scramble');
 		// fx = new TextScramble(scrambleText);
 		// next();
 	}
 	else{
-		UI.classList.remove('show');
-		UI.classList.add('hidden');
+		element.classList.remove('show');
+		element.classList.add('hide');
 	}
 }

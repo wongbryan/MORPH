@@ -89,16 +89,17 @@ modelLoader.load(
 	    loadedBox = true;
 
 	    var loading = document.getElementById('loading');
-	    document.body.removeChild(loading);
+	    toggleVisibility(loading, 0);
+
+	    toggleVisibility(plotPoints[0], 1);
+	    // document.body.removeChild(loading);
 
 	}
 )
 
-
-
 /*OTHER CONSTANTS*/
 
-var MORPH_SPEED = .00005;
+var MORPH_SPEED = .0001;
 
 const COLORS = {
 	Black : new THREE.Color(0x110000),

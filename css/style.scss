@@ -1,7 +1,9 @@
 $Didot-bold : 'Didot-Bold';
 $Didot-med : 'Didot';
+$Didot-italic : 'Didot-Italic';
 $Tungsten : 'Tungsten';
 $Rajdhani : 'Rajdhani';
+$Unna : 'Unna';
 
 @mixin absolute-center{
 	left: 50%;
@@ -15,11 +17,11 @@ body{
 	overflow: hidden;
 }
 
-#loading{
+#storyContainer{
 	background-color: black;
 	height: 100vh;
 	width: 100vw;
-	position: fixed;
+	position: absolute;
 	z-index: 2000;
 }
 
@@ -32,13 +34,23 @@ body{
 }
 
 .hidden{
+	opacity: 0;
+	visibility: hidden;
+}
+
+.showing{
+	opacity: 1;
+	visibility: visible;
+}
+
+.hide{
 	animation: hide 1s forwards;
 }
 
 @keyframes hide{
-	0%{ opacity: .9; visibility: visible;}
-	99%{ opacity: 0; visibility: visible;}
-	100%{ opacity: 0; visibility: hidden;}
+	0%{ opacity: .9; display: block; visibility: visible;}
+	99%{ opacity: 0; display: block; visibility: visible;}
+	100%{ opacity: 0; display: none; visibility: hidden;}
 }
 
 .show{
@@ -79,10 +91,11 @@ body{
 	text-align: center;
 	white-space: nowrap;
 	h1{
-		font-family: $Didot-bold;
-		font-size: 5.5em;
+		font-family: Didot;
+		font-size: 6em;
 		color: white;
 		margin: 0;
+		margin-bottom: 10px;
 	}
 	h2{
 		font-family: $Tungsten;
@@ -128,7 +141,8 @@ body{
 		opacity: .6;
 	}
 	.title{
-		font-family: $Didot-med;
+		font-family: $Unna;
+		font-weight: bold;
 		font-size: 4.5em;
 		color: white;
 		z-index: 2001;
@@ -158,17 +172,63 @@ body{
 		margin-bottom: 5%;
 		max-width: 75%;
 	}
-	.close{
-		font-family: $Rajdhani;
-		margin: auto;
-		font-size: 1.5em;
-		transition: all .4s ease;
-		color: white;
+	.UIcloseButton{
 		text-align: center;
-		display: block;
+		a{
+			font-family: $Rajdhani;
+			margin: auto;
+			font-size: 1.5em;
+			transition: all .4s ease;
+			color: white;
+		}
+		a:hover{
+			color: red;
+			cursor: pointer;
+		}
 	}
-	.close:hover{
-		color: red;
-		cursor: pointer;
+}
+
+#loadingBar{
+	width: 100%;
+	height: 1.5px;
+	background-color: white;
+	margin: auto;
+}
+
+.plotPoint{
+	@include absolute-center;
+	opacity: 0;
+	visibility: hidden;
+	text-align: center;
+	h1,h2{
+		margin: 0;
+	}
+	h1{
+		font-family: $Tungsten;
+		font-size: 6em;
+		color: white;
+	}
+	h2{
+		font-family: Didot;
+		// font-style: italic;
+		font-weight: normal;
+		font-size: 1.5em;
+		color: lightgray;
+		margin-bottom: 10px;
+	}
+	.continue{
+		text-align: center;
+		margin: auto;
+		a{
+			font-family: Didot;
+			font-weight: lighter;
+			font-size: 2.5em;
+			color: lightgray;
+			transition: all .4s;
+		}
+		a:hover{
+			color: red;
+			cursor: pointer;
+		}
 	}
 }
