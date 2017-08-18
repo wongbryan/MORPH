@@ -72,7 +72,8 @@ body{
 
 .kanji{
 	@include absolute-center;
-	height: 80vh;
+	// height: 90vh;
+	height: 60vh;
 	z-index: -1;
 	transform: translate(-50%, -50%);
 	opacity: .4;
@@ -141,7 +142,7 @@ body{
 		opacity: .6;
 	}
 	.title{
-		font-family: $Unna;
+		font-family: Didot;
 		font-weight: bold;
 		font-size: 4.5em;
 		color: white;

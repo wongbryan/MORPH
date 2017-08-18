@@ -62,7 +62,7 @@ body {
   top: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
-  height: 80vh;
+  height: 60vh;
   z-index: -1;
   transform: translate(-50%, -50%);
   opacity: .4;
@@ -132,7 +132,7 @@ body {
     height: 150%;
     opacity: .6; }
   .wrapper .title {
-    font-family: "Unna";
+    font-family: Didot;
     font-weight: bold;
     font-size: 4.5em;
     color: white;
