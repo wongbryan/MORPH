@@ -55,6 +55,8 @@ function ParticleObject(geometry, color, size){
 
   this.index = 0; //which model is current state
 
+  this.autoHover = true;
+
   this.hoverPoints = function(){
       if(!this.autoHover)
         return;
@@ -130,6 +132,8 @@ function ParticleObject(geometry, color, size){
       this.mesh.material.uniforms['amplitude'].value = MIN_MORPH;
     }
     this.mesh.material.uniforms['amplitude'].value += MORPH_SPEED;
+
+    this.hoverPoints();
     // this.mesh.rotation.y += .0025*this.speed*this.speed*this.speed;
     // this.mesh.rotation.x += .0025*this.speed*this.speed*this.speed;
   }

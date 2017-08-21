@@ -128,6 +128,7 @@
 <script src="bower_components/three.js/examples/js/controls/FirstPersonControls.js"></script>
 <script src="bower_components/three.js/examples/js/controls/OrbitControls.js"></script>
 <script src="js/ScrambleText.js"></script>
+<script src="bower_components/particulate/dist/particulate.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/data.js"></script>
 <script src="js/classes.js"></script>
@@ -341,6 +342,8 @@
 
 		if (!loadedBox)
 			return;
+
+		system.tick(1);
 
 		water.material.uniforms.time.value += .025;
 
