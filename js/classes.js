@@ -53,6 +53,8 @@ function ParticleObject(geometry, color, size){
 
   this.speed = 1;
 
+  this.index = 0; //which model is current state
+
   this.hoverPoints = function(){
       if(!this.autoHover)
         return;
