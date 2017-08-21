@@ -12,6 +12,8 @@ var TARGET_BUFFERS = {
 /*OTHER CONSTANTS*/
 
 var MORPH_SPEED = .0001;
+const MIN_MORPH = .05;
+const MAX_MORPH = .95;
 
 const COLORS = {
 	Black : new THREE.Color(0x110000),
@@ -96,7 +98,7 @@ loadModel('assets/tetsuo-compressed.json', 0);
 
 //Arm Tetsuo
 
-loadModel('assets/tetsuo-baby.json', 1);
+loadModel('assets/tetsuo-transform.json', 1);
 
 //Blob Tetsuo
 

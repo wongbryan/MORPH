@@ -31,7 +31,7 @@ function ParticleObject(geometry, color, size){
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
   var uniforms = {
     time : { type : 'f', value : 0.0 },
-    amplitude : { type : 'f', value : 0.05 }, //how far along the morph it is
+    amplitude : { type : 'f', value : MIN_MORPH }, //how far along the morph it is
     color : { type : 'v3', value : COLORS.Red},
     magnitude : { type : 'f', value : 1.},
     opacity : { type : 'f', value : 1.}
@@ -115,8 +115,20 @@ function ParticleObject(geometry, color, size){
   }
 
   this.update = function(){
-    if (this.mesh.material.uniforms['amplitude'].value > 1.00 || this.mesh.material.uniforms['amplitude'].value < 0.00)
-      MORPH_SPEED = -MORPH_SPEED;
+    if (this.mesh.material.uniforms['amplitude'].value > MAX_MORPH || this.mesh.material.uniforms['amplitude'].value < MIN_MORPH){
+      this.index++;
+      if (this.index == NUM_MODELS-1){
+        this.index = 0;
+      }
+      this.mesh.geometry.attributes['position'] = TARGET_BUFFERS.Array[this.index];
+      this.mesh.geometry.attributes['targetPosition'] = TARGET_BUFFERS.Array[this.index+1];
+      this.mesh.material.uniforms['amplitude'].value = 0;
+
+      this.mesh.geometry.attributes['position'].needsUpdate = true;
+      this.mesh.geometry.attributes['targetPosition'].needsUpdate = true;
+
+      this.mesh.material.uniforms['amplitude'].value = MIN_MORPH;
+    }
     this.mesh.material.uniforms['amplitude'].value += MORPH_SPEED;
     // this.mesh.rotation.y += .0025*this.speed*this.speed*this.speed;
     // this.mesh.rotation.x += .0025*this.speed*this.speed*this.speed;
