@@ -25,9 +25,31 @@ const COLORS = {
 
 /*LOAD MODELS*/
 
-var initialGeom; 
+var loadingManager = new THREE.LoadingManager();
+loadingManager.onLoad = function(){
+	console.log('complete');
 
-var modelLoader = new THREE.JSONLoader();
+	//INITIALIZE FIRST MESH
+	box = new ParticleObject(initialGeom, 0x486686, .05);
+    // box.mesh.scale.set(5, 5, 5);
+    box.mesh.rotation.y = 3.5*Math.PI/2;
+    boxMeshesArray.push(box.mesh);
+    scene.add( box.mesh );
+
+    loadedBox = true;
+
+    var loading = document.getElementById('loading');
+    toggleVisibility(loading, 0);
+
+    toggleVisibility(plotPoints[0], 1);
+    // document.body.removeChild(loading);
+
+    window.addEventListener('mousemove', onMouseMove);
+}
+
+var initialGeom; 
+var modelLoader = new THREE.JSONLoader(loadingManager);
+
 modelLoader.load(
 	'assets/tetsuo-compressed.json',
 
@@ -36,10 +58,9 @@ modelLoader.load(
 	}
 )
 
-function loadModel( path, modelNum){ //give index of which model you're loading
+function loadModel( path, modelNum ){ //give index of which model you're loading
 	var targets, vertices, targetAttributeBuffer;
 
-	var modelLoader = new THREE.JSONLoader();
 	modelLoader.load(
 		path,
 
@@ -70,21 +91,22 @@ function loadModel( path, modelNum){ //give index of which model you're loading
 
 			if (modelNum == NUM_MODELS-1){ //if last model loaded
 
-				//INITIALIZE FIRST MESH
-				box = new ParticleObject(initialGeom, 0x486686, .05);
-				console.log(box);
-			    // box.mesh.scale.set(5, 5, 5);
-			    box.mesh.rotation.y = 3.5*Math.PI/2;
-			    boxMeshesArray.push(box.mesh);
-			    scene.add( box.mesh );
+				// //INITIALIZE FIRST MESH
+				// box = new ParticleObject(initialGeom, 0x486686, .05);
+			 //    // box.mesh.scale.set(5, 5, 5);
+			 //    box.mesh.rotation.y = 3.5*Math.PI/2;
+			 //    boxMeshesArray.push(box.mesh);
+			 //    scene.add( box.mesh );
 
-			    loadedBox = true;
+			 //    loadedBox = true;
 
-			    var loading = document.getElementById('loading');
-			    toggleVisibility(loading, 0);
+			 //    var loading = document.getElementById('loading');
+			 //    toggleVisibility(loading, 0);
 
-			    toggleVisibility(plotPoints[0], 1);
-			    // document.body.removeChild(loading);
+			 //    toggleVisibility(plotPoints[0], 1);
+			 //    // document.body.removeChild(loading);
+
+			 //    window.addEventListener('mousemove', onMouseMove);
 			}
 
 			return targetAttributeBuffer;

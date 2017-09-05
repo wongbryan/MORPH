@@ -57,6 +57,7 @@
 	uniform float time;
 	uniform float amplitude;
 	uniform float magnitude;
+	uniform vec2 mouse;
 	attribute vec3 targetPosition;
 	attribute float angle;
 
@@ -69,8 +70,8 @@
 
 		vec3 direction = magnitude*vec3(cos(time+angle), sin(time+angle), cos(time+angle));
 
-		vec3 morphedPosition = position; //set morph to initial position
-		morphedPosition += (targetPosition-position) * amplitude; //amplitude changes from 0->1
+		vec3 morphedPosition = pos; //set morph to initial position
+		morphedPosition += (targetPosition-pos) * amplitude; //amplitude changes from 0->1
 		gl_Position = projectionMatrix * modelViewMatrix * vec4(morphedPosition, 1.);
 	}
 </script>
@@ -135,7 +136,6 @@
 
 	var camera, scene, renderer, controls, gui;
 	var raycaster = new THREE.Raycaster();
-	var mouse = new THREE.Vector2;
 	var cameraTarget = new THREE.Vector3(0,0,0);
 
 	var model;
@@ -155,34 +155,6 @@
 	var boxMeshesArray = [];
 
 	var loadedBox = false;
-	
-	function onMouseDown(){
-		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-		raycaster.setFromCamera(mouse, camera);
-
-		var intersects = raycaster.intersectObjects(rockMeshes, true);
-
-		if (!loadedBox)
-			return;
-
-		if (intersects.length > 0){
-			MORPH_SPEED *= 5;
-			var rock = intersects[0].object.parent;
-			var point = new THREE.Vector3(rock.position.x, rock.position.y, rock.position.z,);
-			var target = point.multiplyScalar(2.);
-			var tween = new TWEEN.Tween(camera.position).to(target, 1500);
-			tween.easing(TWEEN.Easing.Quintic.InOut);
-			tween.onComplete(function(){
-				toggleVisibility(UI, 1);
-			});
-			tween.start();
-
-			// var tween2 = new TWEEN.Tween(cameraTarget).to(point, 1500);
-			// tween2.start();
-			rock.nodeObject.animate();
-		}
-	}
 
 	function resize(){
 		camera.aspect = window.innerWidth / window.innerHeight;
@@ -227,61 +199,28 @@
 		sunLight.castShadow = true;
 		scene.add(sunLight);
 
-		//SET UP NODES
-
-		modelLoader.load(
-			'assets/rock-1.json',
-
-			function(geometry, materials){
-				// var numNodes = 4;
-				// var maxHeight = 72;
-				// for (var i=0; i<numNodes; i++){
-				// 	var node, radius, theta, height;
-				// 	radius = 15 + 5*Math.random();
-				// 	theta = Math.random() * 2 * Math.PI;
-				// 	height = (maxHeight/2)*(-1.0 + 2*Math.random()); //initial model height
-
-				// 	var x, y, z;
-				// 	x = Math.cos(theta) * radius;
-				// 	y = height;
-				// 	z = Math.sin(theta) * radius;
-
-				// 	node = new ForceField(geometry, 5, 2);
-				// 	node.mesh.position.set(x, y, z);
-				// 	nodes.push(node);
-				// 	rockMeshes.push(node.mesh);
-				// 	scene.add(node.mesh);
-				// }
-
-				var node0, node1, node2, node3;
-
-				node0 = new ForceField(geometry, 5, 2);
-				node0.mesh.position.set(10, 20, 25);
-				nodes.push(node0);
-				scene.add(node0.mesh);
-
-				node1 = new ForceField(geometry, 5, 2); //placeholders
-				node1.mesh.position.set(10, 0, -40);
-				nodes.push(node1);
-				scene.add(node1.mesh);
-
-				node2 = new ForceField(geometry, 5, 2); //placeholders
-				node2.mesh.position.set(-20, -30, 7);
-				nodes.push(node2);
-				scene.add(node2.mesh);
-
-				node3 = new ForceField(geometry, 5, 2); //placeholders
-				node3.mesh.position.set(0, 45, -25);
-				nodes.push(node3);
-				scene.add(node3.mesh);
-
-				for (var i=0; i<nodes.length; i++){
-					rockMeshes.push(nodes[i].mesh);
-				}
-			}
-		)
-
 		//SET UP MODEL
+
+		// THREE.DefaultLoadingManager.onLoad = function(){
+		// 	//INITIALIZE FIRST MESH
+		// 	box = new ParticleObject(initialGeom, 0x486686, .05);
+		//     // box.mesh.scale.set(5, 5, 5);
+		//     box.mesh.rotation.y = 3.5*Math.PI/2;
+		//     boxMeshesArray.push(box.mesh);
+		//     scene.add( box.mesh );
+
+		//     loadedBox = true;
+
+		//     console.log('loaded complete');
+
+		//     var loading = document.getElementById('loading');
+		//     toggleVisibility(loading, 0);
+
+		//     toggleVisibility(plotPoints[0], 1);
+		//     // document.body.removeChild(loading);
+
+		//     window.addEventListener('mousemove', onMouseMove);
+		// }
 
 		//SET UP PLANE
 

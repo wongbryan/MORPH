@@ -22,6 +22,8 @@ function ParticleObject(geometry, color, size){
 
   //DEFINE TARGET POSITION ATTRIBUTE
 
+  // console.log(TARGET_BUFFERS.Array[1]);
+
   geom.addAttribute('targetPosition', TARGET_BUFFERS.Array[1]); //transform
   geom.attributes['targetPosition'].dynamic = true;
 
@@ -34,7 +36,8 @@ function ParticleObject(geometry, color, size){
     amplitude : { type : 'f', value : MIN_MORPH }, //how far along the morph it is
     color : { type : 'v3', value : COLORS.Red},
     magnitude : { type : 'f', value : 1.},
-    opacity : { type : 'f', value : 1.}
+    opacity : { type : 'f', value : 1.},
+    mouse : { type : 'v2', value : mouse }
   };
 
   var particleMat = new THREE.ShaderMaterial({
