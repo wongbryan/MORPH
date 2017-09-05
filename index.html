@@ -61,12 +61,12 @@
 	attribute vec3 targetPosition;
 	attribute float angle;
 
-	varying vec3 pos;
+	float rand(float n){return fract(sin(n) * 43758.5453123);}
 
 	void main(){
-		pos = position;
-
 		gl_PointSize = .75;
+
+		vec3 pos = position;
 
 		vec3 direction = magnitude*vec3(cos(time+angle), sin(time+angle), cos(time+angle));
 
@@ -79,8 +79,6 @@
 <script type="fsh" id="fragmentShader">
 	uniform vec3 color;
 	uniform float opacity;
-
-	varying vec3 pos;
 
 	void main(){
 		gl_FragColor = vec4(vec3(color), opacity);
